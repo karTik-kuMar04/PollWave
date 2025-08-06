@@ -1,12 +1,16 @@
-# React + Vite
+# PollWave
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is Kartik's full-stack polling app built using React and Vite.
 
-Currently, two official plugins are available:
+## Project Setup
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+This project uses the [React + Vite](https://vitejs.dev/) template with hot module replacement (HMR) and ESLint configuration.
 
-## Expanding the ESLint configuration
+Currently, two official Vite plugins are available:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh.
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh.
+
+### Expanding the ESLint Configuration
+
+If you are developing a production application, it is recommended to use TypeScript with type-aware lint rules. You can check out the [Vite React TS Template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) and use [`typescript-eslint`](https://typescript-eslint.io) for better type safety.
