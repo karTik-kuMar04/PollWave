@@ -25,12 +25,12 @@ function Landing() {
           </div>
           <div className="flex flex-1 justify-end gap-8">
             <div className="flex gap-2">
-              <button className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-[#7f0cf2] text-white text-sm font-bold leading-normal tracking-[0.015em]">
+              <Link to="/registration" className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-[#7f0cf2] text-white text-sm font-bold leading-normal tracking-[0.015em]">
                 <span className="truncate">Sign Up</span>
-              </button>
-              <button className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-[#302839] text-white text-sm font-bold leading-normal tracking-[0.015em]">
+              </Link>
+              <Link to="/login" className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-[#302839] text-white text-sm font-bold leading-normal tracking-[0.015em]">
                 <span className="truncate">Login</span>
-              </button>
+              </Link>
             </div>
           </div>
         </header>
@@ -198,12 +198,12 @@ function Landing() {
             </div>
             <div className="flex justify-center">
               <div className="flex flex-1 gap-3 flex-wrap px-4 py-3 max-w-[480px] justify-center">
-                <button className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-[#7f0cf2] text-white text-sm font-bold leading-normal tracking-[0.015em] grow">
+                <Link to="/registration?role=host" className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-[#7f0cf2] text-white text-sm font-bold leading-normal tracking-[0.015em] grow">
                   <span className="truncate">Get Started as Host</span>
-                </button>
-                <button className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-[#302839] text-white text-sm font-bold leading-normal tracking-[0.015em] grow">
+                </Link>
+                <Link to="/registration?role=participant" className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-[#302839] text-white text-sm font-bold leading-normal tracking-[0.015em] grow">
                   <span className="truncate">Join as Participant</span>
-                </button>
+                </Link>
               </div>
             </div>
           </div>

@@ -1,4 +1,5 @@
 import React from "react";
+import Header from "../Component/Header";
 import { NavLink } from "react-router-dom";
 import { FaPoll } from "react-icons/fa";
 import { CiBellOn, CiUser } from "react-icons/ci";
@@ -26,34 +27,7 @@ function UpcomingEvents() {
     <div className="relative flex size-full min-h-screen flex-col bg-[#101323] dark group/design-root overflow-x-hidden">
       <div className="layout-container flex h-full grow flex-col">
         {/* Header */}
-        <header className="flex justify-between items-center border-b-1 border-[#1c1e32] p-4">
-          <div>
-            <span className="text-white text-xl font-bold px-10 cursor-pointer">PollWave</span>
-          </div>
-          <div className="flex items-center space-x-8 px-10">
-            <NavLink to="/my-events" className="text-white text-sm text-center hover:-translate-y-0.5 transition-transform duration-100">
-              Home
-            </NavLink>
-            <NavLink className="text-white text-sm text-center hover:-translate-y-0.5 transition-transform duration-100">
-              Join
-            </NavLink>
-            <NavLink
-              to="/my-events/upcoming-events"
-              className="text-white text-sm text-center hover:-translate-y-0.5 transition-transform duration-100"
-            >
-              upcoming events
-            </NavLink>
-            <NavLink className="text-white text-sm text-center hover:-translate-y-0.5 transition-transform duration-100">
-              Explore
-            </NavLink>
-            <button className="text-white text-xl w-[40px] h-[40px] rounded-full bg-[#1c1e32] flex justify-center items-center">
-              <CiBellOn />
-            </button>
-            <button className="text-white text-xl w-[40px] h-[40px] rounded-full bg-[#1c1e32] flex justify-center items-center">
-              <CiUser />
-            </button>
-          </div>
-        </header>
+        <Header />
 
         {/* Main Content */}
         <div className="px-40 flex flex-1 justify-center py-5">

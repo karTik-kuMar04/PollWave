@@ -10,7 +10,7 @@ import {
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
-function Dashboard() {
+function HostDashboard() {
   return (
     <div
       className="relative flex size-full min-h-screen flex-col bg-[#111722] overflow-x-hidden"
@@ -191,13 +191,13 @@ function Dashboard() {
             {/* Bottom Buttons */}
             <div className="flex px-4 py-3 justify-end gap-4">
               <Link
-                to="/create-poll"
+                to="/host/create-poll"
                 className="flex min-w-[84px] max-w-[480px] items-center justify-center rounded-full h-10 px-4 bg-[#135beb] text-white text-sm font-bold tracking-[0.015em]"
               >
                 <span className="truncate">Create New Poll</span>
               </Link>
               <Link
-                to="/create-quiz"
+                to="/host/create-quiz"
                 className="flex min-w-[84px] max-w-[480px] items-center justify-center rounded-full h-10 px-4 bg-[#7f0cf2] text-white text-sm font-bold tracking-[0.015em]"
               >
                 <span className="truncate">Create New Quiz</span>
@@ -210,4 +210,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default HostDashboard;
