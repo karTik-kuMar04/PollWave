@@ -1,9 +1,10 @@
 import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
+import ProtectedRoute from './ProtectedRoute';
 
-// page's imports
+// page imports
 import Landing from './Webpage/web.landing';
-import Registration from './Authentication/Registration/registration';
+import Registration from './Authentication/Registration/Registration';
 import LoginPage from './Authentication/Login/Login';
 import HostDashboard from './Host/Host.dashboard';
 import CreatePoll from './Host/Host.PollCreation';
@@ -14,25 +15,63 @@ import PollCard from './Features/Polling/Polling';
 import Quiz from './Features/Quizzes/Quizzes';
 import NotFound from './Webpage/NotFound';
 
-
 const App = () => {
   return (
     <Routes>
-      <Route index element={<Landing />}></Route>
-
+      {/* Public */}
+      <Route index element={<Landing />} />
       <Route path="registration" element={<Registration />} />
       <Route path="login" element={<LoginPage />} />
 
-      <Route path="host/dashboard" element={<HostDashboard/>} />
-      <Route path="host/create-poll"  element={ <CreatePoll/> }/>
-      <Route path="host/create-quiz"  element={ <CreateQuiz/> }/>
+      {/* Host Protected Routes */}
+      <Route
+        path="host/dashboard"
+        element={
+          <ProtectedRoute allowedRole="host">
+            <HostDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="host/create-poll"
+        element={
+          <ProtectedRoute allowedRole="host">
+            <CreatePoll />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="host/create-quiz"
+        element={
+          <ProtectedRoute allowedRole="host">
+            <CreateQuiz />
+          </ProtectedRoute>
+        }
+      />
 
-      <Route path="/participant/dashboard" element={<MyEvents/>} />
-      <Route path="/participant/upcoming-events" element={<UpcomingEvents/>} />
+      {/* Participant Protected Routes */}
+      <Route
+        path="/participant/dashboard"
+        element={
+          <ProtectedRoute allowedRole="participant">
+            <MyEvents />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/participant/upcoming-events"
+        element={
+          <ProtectedRoute allowedRole="participant">
+            <UpcomingEvents />
+          </ProtectedRoute>
+        }
+      />
 
-      <Route path="poll" element={<PollCard />}/>
+      {/* Public Features */}
+      <Route path="poll" element={<PollCard />} />
       <Route path="quiz" element={<Quiz />} />
 
+      {/* 404 */}
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

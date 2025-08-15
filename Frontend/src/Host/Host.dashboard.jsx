@@ -9,8 +9,27 @@ import {
   FaPoll,
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import axios from "axios";
+
+
+
 
 function HostDashboard() {
+  const [user, setUser] = React.useState()
+
+
+  React.useEffect(() => {
+    axios
+    .get(
+      "http://localhost:4000/api/v1/users/me",
+      {withCredentials: true}
+    )
+    .then(res => setUser(res.data.user))
+    .catch(err => console.error(err))
+
+  }, [])
+
+
   return (
     <div
       className="relative flex size-full min-h-screen flex-col bg-[#111722] overflow-x-hidden"
@@ -24,7 +43,7 @@ function HostDashboard() {
           <div className="layout-content-container flex flex-col max-w-[960px] flex-1">
             <div className="flex flex-wrap justify-between gap-3 p-4">
               <p className="text-white tracking-light text-[32px] font-bold leading-tight min-w-72">
-                Welcome back, Alex
+                Welcome back, {user?.fullName || "User"}
               </p>
             </div>
 

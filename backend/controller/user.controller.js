@@ -9,7 +9,7 @@ const safeUser  = (userDoc) => {
 
 
 // User Registration
-const register = async(res, req, next) => {
+const register = async(req, res, next) => {
     try {
         const { fullName, email, password, role} = req.body;
         // check if user send all info's
@@ -17,7 +17,7 @@ const register = async(res, req, next) => {
             throw new apiError(400, "All feilds are required")
         }
 
-        const exists = await User.findOne({ $or: [email] });
+        const exists = await User.findOne({ $or: [{ email }] });
         // check user provided credentials are exists or not
         if (exists) {
             throw new apiError(409, "User already exists")
@@ -98,16 +98,28 @@ const login = async(req, res, next) => {
 
 
 const getMe = async (req, res, next) => {
-    try {
-        //  this assumes you implemented auth middleware to set req.user
-        const user = await User.findById( req.user._id ).select("-password -refreshToken");
-        res.json({
-            user
-        });
-    } catch (error) {
-        next(error)
+  try {
+    // req.user is already set by verifyJWT with a DB-fetched user
+    // If verifyJWT already returns full user, you could just:
+    // return res.json({ user: req.user });
+
+    const user = await User.findById(req.user._id)
+      .select("-password -refreshToken");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
-}
+
+    res.status(200).json({
+      success: true,
+      user
+    });
+  } catch (error) {
+    console.error("getMe error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 
 export {
     register,

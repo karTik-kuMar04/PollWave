@@ -1,10 +1,12 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import axios from "axios"
 
 export default function Registration() {
   const [searchParams, setSearchParams] = useSearchParams();
   const role = searchParams.get("role");
+  const Navigate = useNavigate();
 
   const {
     register,
@@ -25,9 +27,43 @@ export default function Registration() {
 
   async function onSubmit(data) {
     const isRoleValid = await trigger("role");
+
     if (!isRoleValid) return;
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    console.log(data);
+
+    try {
+      const res = await axios.post(
+        "http://localhost:4000/api/v1/users/register",
+        {
+          fullName: data.fullName,
+          email: data.email,
+          password: data.password,
+          role: data.role
+        },
+        {
+          headers: {
+            "Content-Type": "application/json"
+          },
+          withCredentials: true
+        }
+      )
+
+      const role = res.data.data.user.role;
+
+      // redirect based on their role
+      if (role === "host") {
+        Navigate("/host/dashboard");
+      } else {
+        Navigate("/participant/dashboard");
+      }
+    } catch (error) {
+      if (error.response) {
+        console.error("Backend error:", error.response.data);
+        alert("❌ " + (error.response.data.message || "Registration failed"));
+      } else {
+        console.error("Axios error:", error.message);
+        alert("❌ " + error.message);
+      }
+    }
   }
 
   return (
@@ -38,15 +74,15 @@ export default function Registration() {
       >
         <h1 className="text-3xl font-bold text-center">Register</h1>
 
-        {/* Username */}
+        {/* Full Name */}
         <div>
           <input
             type="text"
-            placeholder="Username"
+            placeholder="Full Name"
             autoComplete="off"
             className="w-full px-4 py-3 rounded bg-gray-700 focus:ring-2 focus:ring-green-500 outline-none"
-            {...register("username", {
-              required: "Username is required",
+            {...register("fullName", {
+              required: "fullname is required",
               minLength: { value: 4, message: "Min length should be 4" },
               maxLength: { value: 15, message: "Max length should be 15" },
               pattern: {
@@ -55,8 +91,8 @@ export default function Registration() {
               },
             })}
           />
-          {errors.username && (
-            <p className="text-red-400 text-sm mt-1">{errors.username.message}</p>
+          {errors.fullName && (
+            <p className="text-red-400 text-sm mt-1">{errors.fullName.message}</p>
           )}
         </div>
 

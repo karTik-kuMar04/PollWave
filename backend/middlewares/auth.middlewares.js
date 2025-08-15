@@ -1,20 +1,35 @@
 import jwt from "jsonwebtoken";
 import { apiError } from "../utils/apiError.js";
- 
+import { User } from "../models/user.model.js";
 
+const verifyJWT = async (req, res, next) => {
+  try {
+    // Get token from cookie first, then Authorization header
+    const token =
+      req.cookies?.accessToken ||
+      (req.headers.authorization?.startsWith("Bearer ")
+        ? req.headers.authorization.split(" ")[1]
+        : null);
 
-const verifyJWT = (res, req, next) => {
-    try {
-        const authHeader = req.headers.authorization || "";
-        const token = authHeader.startsWith("Bearer ") ? authHeader.split(" ")[1] : req.cookies?.accessToken;
-        if (!token) return res.status(401).json({ message: "No token" });
-
-        const payload = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-        req.user = payload;
-        next();
-    } catch (error) {
-        throw new apiError(401, "Invalid Token")
+    if (!token) {
+      return res.status(401).json({ message: "Not authenticated" });
     }
-}
 
-export { verifyJWT }
+    // Verify token
+    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+
+    // Fetch user from DB to ensure role/status is fresh
+    const user = await User.findById(decoded._id).select("-password -refreshToken");
+    if (!user) {
+      return res.status(401).json({ message: "User not found" });
+    }
+
+    req.user = user; // Attach full user object
+    next();
+  } catch (error) {
+    console.error("JWT verification error:", error);
+    return res.status(401).json({ message: "Invalid or expired token" });
+  }
+};
+
+export { verifyJWT };
