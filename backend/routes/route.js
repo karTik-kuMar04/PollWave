@@ -9,7 +9,7 @@ router.post("/login", login);
 router.get("/me", verifyJWT, getMe);
 
 
-router.post("/polls)", verifyJWT, createPoll);
+router.post("/polls", verifyJWT, createPoll);
 router.post("/quizzes", verifyJWT, createQuiz);
 
 router.post("/polls/:pollId/respond", verifyJWT, respondToPoll);
