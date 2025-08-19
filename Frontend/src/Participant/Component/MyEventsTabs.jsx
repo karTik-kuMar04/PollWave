@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './EventsTab.css';
+import axios from 'axios';
 
 const MyEventsTabs = () => {
   const [activeTab, setActiveTab] = useState('quizzes');
@@ -11,11 +12,26 @@ const MyEventsTabs = () => {
     { title: 'Global Affairs Challenge', date: 'May 5, 2024', score: '88%' },
   ];
 
-  const polls = [
-    { title: 'Community Feedback Survey', date: 'August 10, 2024', result: 'Option A: 45%' },
-    { title: 'Product Feature Voting', date: 'July 22, 2024', result: 'Option B: 60%' },
-    { title: 'Event Theme Selection', date: 'June 5, 2024', result: 'Option C: 55%' },
-  ];
+  const [polls, setPolls] = useState([])
+
+  useEffect(() => {
+    const fetchPollResponses = async () => {
+      try {
+        const res = await axios.get(
+          "http://localhost:4000/api/v1/users/mypolls/responses",
+          { withCredentials: true }
+        )
+
+        setPolls(res.data.responseOnPoll);
+      } catch (error) {
+        console.error('Error fetching poll responses:', error);
+      }
+
+    }
+    if (activeTab === "polls") {
+      fetchPollResponses();
+    }
+  }, [activeTab]);
 
   return (
     <div className="text-white px-6 py-4">
@@ -100,9 +116,17 @@ const MyEventsTabs = () => {
               <tbody>
                 {polls.map((poll, i) => (
                   <tr key={i} className="border-t border-gray-700">
-                    <td className="py-2">{poll.title}</td>
-                    <td className="py-2">{poll.date}</td>
-                    <td className="py-2">{poll.result}</td>
+                    <td className="py-2">{poll.poll?.title}</td>
+                    <td className="py-2">
+                      {new Date(poll.createdAt).toLocaleDateString(
+                        "en-GB",
+                        {
+                          day: "2-digit",
+                          month: "short",
+                          year: "numeric",
+                        }
+                      )}
+                    </td>
                   </tr>
                 ))}
               </tbody>

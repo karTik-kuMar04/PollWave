@@ -8,7 +8,8 @@ import {
   getPollById, 
   getQuizById,
   getMyPolls,
-  pollStatusUpdate
+  pollStatusUpdate,
+  getMyPollsResponses
 } from "../controller/host.controller.js";
 import { verifyJWT } from "../middlewares/auth.middlewares.js";
 
@@ -24,6 +25,7 @@ router.post("/polls", verifyJWT, createPoll);
 router.get("/polls/:pollId", getPollById);
 router.post("/polls/:pollId/respond", verifyJWT, respondToPoll);
 router.get("/mypolls", verifyJWT, getMyPolls);
+router.get("/mypolls/responses", verifyJWT, getMyPollsResponses);
 router.patch("/polls/:pollId/status", pollStatusUpdate);
 
 

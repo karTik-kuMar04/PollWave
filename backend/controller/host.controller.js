@@ -354,3 +354,36 @@ export const pollStatusUpdate = async (req, res, next) => {
     next(error);
   }
 }
+
+
+export const getMyPollsResponses = async (req, res, next) => {
+  try {
+    const participantId = req.user?._id;
+    
+    if (!participantId) {
+      throw new apiError(401, "Unauthorized access");
+    }else(
+      console.log("Participant ID:", participantId)
+    )
+
+    const responseOnPoll = await PollResponse.find({ user: participantId })
+      .sort({ createdAt: -1 })
+      .populate("poll", "title")
+      .select("selectedOptionIds createdAt");
+
+    if (!responseOnPoll || responseOnPoll.length === 0) {
+      throw new apiError(404, "you did not participated in any polls yet"); // this should changed as message in future
+    }
+
+    res.status(200).json({
+      success: true,
+      responseOnPoll,
+    });
+
+  } catch (error) {
+    console.error("Error in /poll-responses:", error.message);
+    console.error(error.stack);
+    return res.status(500).json({ success: false, message: error.message });
+  }
+
+}
