@@ -24,7 +24,7 @@ const Header = () => {
         </NavLink>
 
         <NavLink
-          to="/join"
+          to="/participant/join"
           className={({ isActive }) =>
             `text-sm text-center transition-all duration-150 ${
               isActive ? 'text-cyan-400 font-semibold' : 'text-white hover:text-cyan-300'

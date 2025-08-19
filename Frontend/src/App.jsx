@@ -14,6 +14,7 @@ import UpcomingEvents from './Participant/Pages/UpcomingEvents';
 import PollCard from './Features/Polling/Polling';
 import Quiz from './Features/Quizzes/Quizzes';
 import NotFound from './Webpage/NotFound';
+import JoinPage from './Participant/Pages/Join';
 
 const App = () => {
   return (
@@ -66,10 +67,18 @@ const App = () => {
           </ProtectedRoute>
         }
       />
+      <Route
+        path="/participant/join"
+        element={
+          <ProtectedRoute allowedRole="participant">
+            <JoinPage />
+          </ProtectedRoute>
+        }
+      />
 
       {/* Public Features */}
-      <Route path="poll" element={<PollCard />} />
-      <Route path="quiz" element={<Quiz />} />
+      <Route path="poll/:pollId" element={<PollCard />} />
+      <Route path="quiz/:quizId" element={<Quiz />} />
 
       {/* 404 */}
       <Route path="*" element={<NotFound />} />

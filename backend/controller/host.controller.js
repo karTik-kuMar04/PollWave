@@ -31,10 +31,15 @@ export const createPoll = async (req, res, next) => {
             settings
         });
 
+
+        const populatedPoll = await Poll.findById(poll._id)
+            .populate("host", "fullName email");
+
+
         return res.status(201).json({
             success: true,
             message: "Poll created successfully",
-            poll
+            poll: populatedPoll
         });
     } catch (err) {
         next(err);
@@ -49,91 +54,93 @@ export const createPoll = async (req, res, next) => {
 ----------------------------*/
 
 export const respondToPoll = async (req, res, next) => {
-    const session = await mongoose.startSession();
-    session.startTransaction();
+  const session = await mongoose.startSession();
+  session.startTransaction();
 
+  try {
+    const { pollId } = req.params;
+    let { selectedOptionIds, selectedOption } = req.body;
+    const userId = req.user ? req.user._id : null;
 
-    try {
-        const { pollId } = req.params;
-        const  { selectedOptionIds } = req.body;
-        const userId = req.user ? req.user._id : null;
-
-        if (!Array.isArray(selectedOptionIds) || selectedOptionIds.length === 0) {
-            throw new apiError(400, "no options selected");
-        }
-
-        // get poll
-        const poll = await poll.findById(pollId).session(session);
-        if (!poll) throw new apiError(404, "Poll not found");
-
-        // check status/time
-        if(poll.status !== "active") throw new apiError(400, "Poll is not active");
-        const now = new Date();
-        if (poll.startAt && poll.startAt > now) {
-            throw new apiError(400, "poll has not started yet");
-        }
-        if (poll.endAt && poll.endAt < now) {
-            throw new apiError(400, "poll has ended");
-        }
-
-        // if poll has maxVotesPerUser = 1 and user is authenticated, prevent repeat responses
-        if (userId) {
-            const already = await PollResponse.findOne({ poll: pollId, user: userId }).session(session);
-            if (already) {
-                throw new apiError(400, "User has already responded to this poll");
-            }
-        }
-
-        // if anonymous responses are not allowed
-        if (!poll.allowedAnonymous && !userId) {
-            throw new apiError(401, "Authentication is required");
-        }
-
-        // create poll response
-        const responseDoc = await PollResponse.create([{
-            poll: pollId,
-            user: userId || null,
-            selectedOptionIds
-        }], { session });
-
-        // update votes and participantsCount atomically
-        // for each selected option increment option.votes by 1
-        const bulkUpdates = selectedOptionIds.map(optId => ({
-            updateOne: {
-                filter: { _id: poll._id, "options._id": optId },
-                update: { $inc: { "options.$.votes": 1 } }
-            }
-        }));
-
-        // increment participantsCount by 1
-        bulkUpdates.push({
-            updateOne: {
-                dateOne: {
-                    filter: { _id: poll._id },
-                    update: { $inc: { participantsCount: 1 } }
-                }
-            }
-        });
-
-        // execute as one operation on Poll collection (not a mongoose transaction op,
-        // but wrapped inside session for atomicity across docs when using transaction)
-
-        await poll.bulkWrite(bulkUpdates, { session });
-
-        await session.commitTransaction();
-        session.endSession();
-        return res.status(200).json({
-            success: true,
-            message: "Poll response recorded successfully",
-
-        })
-    } catch (err) {
-       await session.abortTransaction();
-        session.endSession();
-        const status = err.status || 500;
-        return next({ status, message: err.message || "Failed to record response" });
+    if (selectedOption && !selectedOptionIds) {
+      selectedOptionIds = [selectedOption];
     }
-}
+
+    if (!Array.isArray(selectedOptionIds) || selectedOptionIds.length === 0) {
+      throw new apiError(400, "No options selected");
+    }
+
+    // ✅ Fetch poll document
+    const pollDoc = await Poll.findById(pollId).session(session);
+    if (!pollDoc) throw new apiError(404, "Poll not found");
+
+    // ✅ Check poll status and timings
+    if (pollDoc.status !== "active") throw new apiError(400, "Poll is not active");
+
+    const now = new Date();
+    if (pollDoc.startAt && pollDoc.startAt > now) {
+      throw new apiError(400, "Poll has not started yet");
+    }
+    if (pollDoc.endAt && pollDoc.endAt < now) {
+      throw new apiError(400, "Poll has ended");
+    }
+
+    // ✅ Prevent repeat responses if only 1 allowed per user
+    if (userId) {
+      const already = await PollResponse.findOne({ poll: pollId, user: userId }).session(session);
+      if (already) throw new apiError(400, "User has already responded to this poll");
+    }
+
+    // ✅ If anonymous responses are not allowed
+    if (!pollDoc.allowedAnonymous && !userId) {
+      throw new apiError(401, "Authentication is required");
+    }
+
+    // ✅ Create poll response
+    await PollResponse.create(
+      [
+        {
+          poll: pollId,
+          user: userId || null,
+          selectedOptionIds,
+        },
+      ],
+      { session }
+    );
+
+    // ✅ Update votes & participants atomically
+    const bulkUpdates = selectedOptionIds.map((optId) => ({
+      updateOne: {
+        filter: { _id: pollDoc._id, "options._id": optId },
+        update: { $inc: { "options.$.votes": 1 } },
+      },
+    }));
+
+    // increment participantsCount
+    bulkUpdates.push({
+      updateOne: {
+        filter: { _id: pollDoc._id },
+        update: { $inc: { participants: 1 } },
+      },
+    });
+
+    await Poll.bulkWrite(bulkUpdates, { session });
+
+    await session.commitTransaction();
+    session.endSession();
+
+    return res.status(200).json({
+      success: true,
+      message: "✅ Poll response recorded successfully",
+    });
+  } catch (err) {
+    await session.abortTransaction();
+    session.endSession();
+    console.error("❌ Error in respondToPoll:", err);
+    const status = err.status || 500;
+    return next({ status, message: err.message || "Failed to record response" });
+  }
+};
 
 
 
@@ -256,4 +263,94 @@ export const attemptQuiz = async (req, res, next) => {
         const status = err.status || 500;
         return next({ status, message: err.message || "Failed to submit quiz" });
     }
+}
+
+
+
+
+export const getPollById = async (req, res, next) => {
+  try {
+    const { pollId } = req.params;
+
+    const poll = await Poll.findById(pollId).populate("host", "fullName email"); // 👈 populate host info     
+
+    if (!poll) {
+      throw new apiError(404, "Poll not found");
+    }
+
+    return res.status(200).json({
+      success: true,
+      poll
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+
+export const getQuizById = async (req, res) => {
+  try {
+    const quiz = await Quiz.findById(req.params.quizId).populate("host", "name email");
+    if (!quiz) {
+      return res.status(404).json({ message: "Quiz not found" });
+    }
+    res.json({ quiz });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+
+
+
+
+export const getMyPolls = async (req, res, next) => {
+  try {
+    const hostId = req.user._id; //from auth middleware
+
+    const polls = await Poll.find({ host: hostId })
+      .sort({createdAt: -1})
+      .select("title status participants createdAt")
+
+    if (!polls || polls.length === 0) {
+      throw new apiError(404, "No polls found for this user");
+    }
+
+    res.status(200).json({
+      success: true,
+      polls,
+    });
+  } catch (err) {
+    next({ status: 500, message: err.message || "Failed to fetch polls" });
+  }
+}
+
+
+
+
+
+
+export const pollStatusUpdate = async (req, res, next) => {
+  try {
+    const { pollId } = req.params;
+    const { status } = req.body;
+
+    if (!["draft", "active", "closed"].includes(status)) {
+      return next({ status: 400, message: "Invalid status" });
+    }
+
+    const poll = await Poll.findByIdAndUpdate(
+      pollId,
+      { status },
+      { new: true }
+    ).populate("host", "fullName email");
+
+    if (!poll) {
+      return res.status(404).json({ success: false, message: "Poll not found" });
+    }
+
+    res.status(200).json({ success: true, poll });
+  } catch (error) {
+    next(error);
+  }
 }

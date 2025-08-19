@@ -1,52 +1,45 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const PollCard = () => {
   const [poll, setPoll] = useState(null);
-  const [selectedOption, setSelectedOption] = useState([]);
+  const [selectedOption, setSelectedOption] = useState(null);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const { pollId } = useParams();
 
   useEffect(() => {
     axios
-      .get(`http://localhost:4000/api/v1/users/polls/${pollId}`)
-      .then((res) => setPoll(res.data.poll))
+      .get(`http://localhost:4000/api/v1/users/polls/${pollId}`, { withCredentials: true })
+      .then((res) => {
+        setPoll(res.data.poll);
+        setSelectedOption(null); // only one option allowed
+      })
       .catch((err) => console.error(err));
   }, [pollId]);
 
   const onToggleOption = (optionId) => {
-    if (poll.type === "single-choice") {
-      setSelectedOption([optionId]); // ✅ fix
-    } else {
-      setSelectedOption((prev) =>
-        prev.includes(optionId)
-          ? prev.filter((x) => x !== optionId)
-          : [...prev, optionId]
-      );
-    }
+    setSelectedOption(optionId); // always one option
   };
 
   const onSubmit = async () => {
-    if (selectedOption.length === 0) {
+    if (!selectedOption) {
       return alert("Please select an option");
     }
     setLoading(true);
     try {
       await axios.post(
         `http://localhost:4000/api/v1/users/polls/${pollId}/respond`,
-        { selectedOption },
+        { selectedOptionIds: [selectedOption] }, // single string only
         { withCredentials: true }
       );
       alert("✅ Response recorded");
 
-      // refresh poll
-      const refreshed = await axios.get(
-        `http://localhost:4000/api/v1/users/polls/${pollId}`
-      );
-      setPoll(refreshed.data.poll);
-      setSelectedOption([]); // reset after vote
+      // redirect to dashboard after submission
+      navigate("/participant/dashboard");
+      
     } catch (err) {
       alert(err.response?.data?.message || "Failed to submit");
     } finally {
@@ -61,13 +54,13 @@ const PollCard = () => {
       <div className="w-full max-w-md border border-[#3b4754] rounded-xl bg-[#101323] shadow-md">
         <div className="py-5 px-6">
           <p className="text-white text-sm font-normal text-center mb-1">
-            Hosted by: {poll.host?.name || "Unknown"}
+            <span className="italic">Hosted by:</span> {poll.host?.fullName || "Unknown"}
           </p>
           <h2 className="text-white text-lg font-semibold text-center mb-2">
-            {poll.question}
+            {poll.title}
           </h2>
           <p className="text-[#cbd5e1] text-sm text-center mb-4">
-            Share your preference in this quick poll.
+            {poll.description || "No description provided."}
           </p>
 
           <div className="flex flex-col gap-3">
@@ -75,16 +68,17 @@ const PollCard = () => {
               <label
                 key={option._id}
                 className={`flex items-center gap-4 rounded-xl border p-4 cursor-pointer transition-colors duration-200 ${
-                  selectedOption.includes(option._id)
+                  selectedOption === option._id
                     ? "border-green-500 bg-green-900/30"
                     : "border-[#3b4754]"
                 }`}
               >
                 <input
-                  type={poll.type === "single-choice" ? "radio" : "checkbox"}
-                  checked={selectedOption.includes(option._id)}
+                  type="radio" // 🔥 only radio
+                  checked={selectedOption === option._id}
                   onChange={() => onToggleOption(option._id)}
                   className="h-5 w-5 text-green-500 focus:outline-none"
+                  name="pollOption" // 🔥 ensures only one selectable
                 />
                 <p className="text-white text-sm font-medium leading-normal">
                   {option.text}
