@@ -9,7 +9,7 @@ const ChoiceSchema = new mongoose.Schema({
 const QuestionSchema = new mongoose.Schema({
     _id: { type: mongoose.Schema.Types.ObjectId, auto: true },
     text: { type: String, required: true},
-    Choices: [ChoiceSchema],
+    choices: [ChoiceSchema],
     correctChoiceIndex: { type: Number, required: true },
     points: { type: Number, default: 1 }
 })

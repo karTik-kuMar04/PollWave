@@ -8,7 +8,7 @@ import Registration from './Authentication/Registration/Registration';
 import LoginPage from './Authentication/Login/Login';
 import HostDashboard from './Host/Host.dashboard';
 import CreatePoll from './Host/Host.PollCreation';
-import CreateQuiz from './Host/Host.QuizCreation';
+import CreateQuizEnhanced from './Host/Host.QuizCreation';
 import MyEvents from './Participant/Pages/MyEvents';
 import UpcomingEvents from './Participant/Pages/UpcomingEvents';
 import PollCard from './Features/Polling/Polling';
@@ -45,7 +45,7 @@ const App = () => {
         path="host/create-quiz"
         element={
           <ProtectedRoute allowedRole="host">
-            <CreateQuiz />
+            <CreateQuizEnhanced />
           </ProtectedRoute>
         }
       />
