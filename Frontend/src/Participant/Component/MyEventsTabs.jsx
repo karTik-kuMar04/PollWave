@@ -98,11 +98,6 @@ const MyEventsTabs = () => {
       {/* Polls Section */}
       {activeTab === 'polls' && (
         <>
-          <div className="bg-[#1c1e32] p-6 rounded-lg mb-6">
-            <p className="text-gray-400 text-sm mb-1">Total Polls Participated</p>
-            <p className="text-2xl font-bold">8</p>
-          </div>
-
           <div className="bg-[#1c1e32] p-4 rounded-lg">
             <h2 className="text-lg font-semibold mb-4">Joined Polls</h2>
             <table className="w-full text-sm text-left">
@@ -110,28 +105,38 @@ const MyEventsTabs = () => {
                 <tr>
                   <th className="py-2">Event Title</th>
                   <th className="py-2">Date of Participation</th>
-                  <th className="py-2">Result</th>
+                  <th className="py-2">Voted for</th>
                 </tr>
               </thead>
               <tbody>
                 {polls.map((poll, i) => (
                   <tr key={i} className="border-t border-gray-700">
-                    <td className="py-2">{poll.poll?.title}</td>
+                    <td className="py-2 font-medium text-white">{poll.poll?.title}</td>
+                    <td className="py-2 text-gray-300">
+                      {new Date(poll.createdAt).toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      })}
+                    </td>
                     <td className="py-2">
-                      {new Date(poll.createdAt).toLocaleDateString(
-                        "en-GB",
-                        {
-                          day: "2-digit",
-                          month: "short",
-                          year: "numeric",
-                        }
-                      )}
+                      {poll.poll?.options
+                        .filter(opt => poll.selectedOptionIds.includes(opt._id))
+                        .map(opt => (
+                          <span
+                            key={opt._id}
+                            className="inline-block text-white text-xs px-2 py-1 rounded-full mr-1"
+                          >
+                            {opt.text}
+                          </span>
+                        ))}
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
+
 
           
         </>
