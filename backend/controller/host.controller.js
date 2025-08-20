@@ -257,9 +257,10 @@ export const attemptQuiz = async (req, res, next) => {
 
         return res.status(201).json({ success: true, result: result[0] });
         
-    } catch (error) {
+    } catch (err) {
         await session.abortTransaction();
         session.endSession();
+        console.error("Quiz Attempt Error:", err);
         const status = err.status || 500;
         return next({ status, message: err.message || "Failed to submit quiz" });
     }
@@ -325,6 +326,27 @@ export const getMyPolls = async (req, res, next) => {
   }
 }
 
+export const getMyQuiz = async (req, res, next) => {
+  try {
+    const hostId = req.user._id; //from auth middleware
+    const quizzes = await Quiz.find({ host: hostId })
+      .sort({ createdAt: -1 })
+      .select("title status participantsCount createdAt");
+
+    if (!quizzes || quizzes.length === 0) {
+      throw new apiError(404, "No quizzes found for this user");
+    }
+
+    res.status(200).json({
+      success: true,
+      quizzes,
+    });
+  } catch (err) {
+    next({ status: 500, message: err.message || "Failed to fetch quizzes"
+    });
+  }
+}
+
 
 
 
@@ -350,6 +372,29 @@ export const pollStatusUpdate = async (req, res, next) => {
     }
 
     res.status(200).json({ success: true, poll });
+  } catch (error) {
+    next(error);
+  }
+}
+
+
+export const quizStatusUpdate = async (req, res, next) => {
+  try {
+    const { quizId } = req.params;
+    const { status } = req.body;
+    if (!["draft", "active", "closed"].includes(status)) {
+      return next({ status: 400, message: "Invalid status" });
+    }
+    const quiz = await Quiz.findByIdAndUpdate(
+      quizId,
+      { status },
+      { new: true }
+    ).populate("host", "name email");
+
+    if (!quiz) {
+      return res.status(404).json({ success: false, message: "Quiz not found" });
+    }
+    res.status(200).json({ success: true, quiz });
   } catch (error) {
     next(error);
   }

@@ -11,9 +11,13 @@ const Quiz = () => {
   // Fetch quiz
   useEffect(() => {
     axios
-      .get(`http://localhost:4000/api/quizzes/${quizId}`, { withCredentials: true })
+      .get(`http://localhost:4000/api/v1/users/quiz/${quizId}`, {
+        withCredentials: true,
+      })
       .then((res) => setQuiz(res.data.quiz))
-      .catch((err) => alert(err.response?.data?.message || "Failed to load quiz"));
+      .catch((err) =>
+        alert(err.response?.data?.message || "Failed to load quiz")
+      );
   }, [quizId]);
 
   // Select answer
@@ -36,7 +40,7 @@ const Quiz = () => {
 
     try {
       const res = await axios.post(
-        `http://localhost:4000/api/quizzes/${quizId}/attempt`,
+        `http://localhost:4000/api/v1/users/quizzes/${quizId}/respond`,
         payload,
         { withCredentials: true }
       );
@@ -46,37 +50,43 @@ const Quiz = () => {
     }
   };
 
-  if (!quiz) return <div>Loading...</div>;
+  if (!quiz) return <div className="text-white text-center">Loading...</div>;
 
   const currentQ = quiz.questions[currentQuestion];
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-[#111418] p-4">
-      <div className="w-full max-w-md border border-[#3b4754] rounded-xl bg-[#101323] shadow-md">
-        <div className="py-5 px-6">
-          <h2 className="text-white text-lg font-semibold text-center mb-2">
-            {currentQ.question}
+    <div className="flex justify-center items-center min-h-screen bg-gradient-to-b from-[#0d1117] to-[#111418] p-6">
+      <div className="w-full max-w-2xl rounded-2xl bg-[#101323] shadow-xl border border-[#2b3441] overflow-hidden">
+        
+        {/* Quiz Header */}
+        <div className="px-6 py-5 border-b border-[#2b3441] text-center">
+          <h1 className="text-2xl font-bold text-white mb-2">{quiz.title}</h1>
+          <p className="text-gray-400 text-sm">{quiz.description}</p>
+        </div>
+
+        {/* Question Section */}
+        <div className="px-6 py-6">
+          <h2 className="text-lg font-semibold text-white mb-4 text-center">
+            Q{currentQuestion + 1}. {currentQ.text}
           </h2>
 
-          <div className="flex flex-col gap-3 mt-4">
-            {currentQ.options.map((option, index) => (
+          <div className="flex flex-col gap-3">
+            {currentQ?.choices?.map((option, index) => (
               <label
                 key={index}
-                className={`flex items-center gap-4 rounded-xl border border-solid p-4 cursor-pointer transition-colors duration-200 ${
+                className={`flex items-center gap-4 rounded-xl border p-4 cursor-pointer transition-all duration-200 ${
                   answers[currentQ._id] === index
                     ? "border-green-500 bg-green-900/30"
-                    : "border-[#3b4754]"
+                    : "border-[#3b4754] hover:border-blue-500/50"
                 }`}
               >
                 <input
                   type="radio"
                   checked={answers[currentQ._id] === index}
                   onChange={() => selectOption(currentQ._id, index)}
-                  className="h-5 w-5 text-green-500 focus:outline-none focus:ring-0 focus:ring-offset-0"
+                  className="h-5 w-5 text-green-500 focus:outline-none focus:ring-0"
                 />
-                <p className="text-white text-sm font-medium leading-normal">
-                  {option}
-                </p>
+                <p className="text-white text-sm">{option.text}</p>
               </label>
             ))}
           </div>
@@ -105,13 +115,13 @@ const Quiz = () => {
             <button
               disabled={!allAnswered}
               onClick={submit}
-              className={`flex w-full sm:w-auto items-center justify-center overflow-hidden rounded-full h-10 px-6 text-white text-sm font-bold leading-normal tracking-[0.015em] transition-opacity duration-300 ${
+              className={`w-full sm:w-auto px-6 h-11 rounded-full font-semibold text-sm transition-all duration-300 ${
                 allAnswered
-                  ? "bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-600"
-                  : "bg-gradient-to-r from-green-400 to-blue-500 cursor-not-allowed opacity-50"
+                  ? "bg-gradient-to-r from-green-400 to-blue-500 text-white hover:from-green-500 hover:to-blue-600"
+                  : "bg-gray-600 text-gray-300 cursor-not-allowed"
               }`}
             >
-              <span className="truncate">Submit Quiz</span>
+              Submit Quiz
             </button>
           </div>
         </div>

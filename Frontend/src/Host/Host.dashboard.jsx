@@ -1,19 +1,23 @@
-import React from "react";
-import {
-  FaHome,
-  FaPlus,
-  FaList,
-  FaChartBar,
-  FaArrowLeft,
-  FaSignOutAlt,
-  FaPoll,
-} from "react-icons/fa";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
-function HostDashboard() {
+
+
+export default function HostDashboard() {
+  const [activeTab, setActiveTab] = useState("polls"); // 'polls' | 'quizzes' | 'both'
+  const [showSidebar, setShowSidebar] = useState(true);
+  const [loading, setLoading] = React.useState(true);
+
+
+
+
+
+
+
   const [user, setUser] = React.useState();
   const [polls, setPolls] = React.useState([]);
+  const [quizzes, setQuizzes] = React.useState([])
 
   React.useEffect(() => {
     axios
@@ -22,23 +26,27 @@ function HostDashboard() {
       .catch((err) => console.error(err));
   }, []);
 
-  React.useEffect(() => {
-    const fetchMyPolls = async () => {
+  useEffect(() => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:4000/api/v1/users/mypolls",
-          { withCredentials: true }
-        );
+        const [pollRes, quizRes] = await Promise.all([
+          axios.get("http://localhost:4000/api/v1/users/mypolls", { withCredentials: true }),
+          axios.get("http://localhost:4000/api/v1/users/myquiz", { withCredentials: true }),
+        ]);
 
-        setPolls(response.data.polls || []);
-      } catch (error) {
-        console.error("Failed to fetch my polls:", error);
+        setPolls(pollRes.data.polls || []);
+        setQuizzes(quizRes.data.quizzes || []);
+      } catch (err) {
+        console.error("Error loading dashboard data:", err.response?.data || err.message);
+      } finally {
+        setLoading(false);
       }
     };
-    fetchMyPolls();
+
+    fetchData();
   }, []);
 
-  const handleStatusChange = async (pollId, newStatus) => {
+  const handlePollStatusChange = async (pollId, newStatus) => {
     try {
       await axios.patch(
         `http://localhost:4000/api/v1/users/polls/${pollId}/status`,
@@ -56,118 +64,235 @@ function HostDashboard() {
     }
   };
 
+
+  
+
+  const handleQuizStatusChange = async (quizId, newStatus) => {
+    try {
+      await axios.patch(
+        `http://localhost:4000/api/v1/users/quizzes/${quizId}/status`,
+        { status: newStatus },
+        { withCredentials: true }
+      );
+
+      setQuizzes((prev) =>
+        prev.map((q) =>
+          q._id === quizId ? { ...q, status: newStatus } : q
+        )
+      );
+    } catch (error) { 
+      console.error("Error updating quiz status:", error);
+    }  
+  }
+
+
+
+    // inside HostDashboard component, before return
+  const totalPollParticipants = polls.reduce(
+    (sum, p) => sum + (p.participants ?? 0),
+    0
+  );
+
+  const totalQuizParticipants = quizzes.reduce(
+    (sum, q) => sum + (q.participantsCount ?? 0),
+    0
+  );
+
+  const totalResponses = totalPollParticipants + totalQuizParticipants;
+
+
+
   return (
-    <div
-      className="relative flex size-full min-h-screen flex-col bg-[#111722] overflow-x-hidden"
-      style={{ fontFamily: '"Spline Sans", "Noto Sans", sans-serif' }}
+    <div className="min-h-screen bg-gray-900 text-gray-100">
+      <div className="flex h-screen">
+        {/* SIDEBAR */}
+        <aside className={`hidden md:flex md:flex-col md:w-64 p-4 gap-6 bg-gray-800 border-r border-gray-700 shadow-sm ${showSidebar ? "" : "-translate-x-full"}`}>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-lg flex items-center justify-center text-white font-bold">PW</div>
+            <div>
+              <h3 className="font-semibold">PollWave</h3>
+              <p className="text-xs text-gray-400">Host Dashboard</p>
+            </div>
+          </div>
+
+          <nav className="flex-1">
+            <ul className="space-y-1">
+              <li className="px-3 py-2 rounded hover:bg-gray-700 cursor-pointer">Dashboard</li>
+              <li className="px-3 py-2 rounded hover:bg-gray-700 cursor-pointer">Polls</li>
+              <li className="px-3 py-2 rounded hover:bg-gray-700 cursor-pointer">Quizzes</li>
+              <li className="px-3 py-2 rounded hover:bg-gray-700 cursor-pointer">Analytics</li>
+              <li className="px-3 py-2 rounded hover:bg-gray-700 cursor-pointer">Settings</li>
+            </ul>
+          </nav>
+
+          <div className="mt-auto">
+            <button className="w-full text-left px-3 py-2 rounded bg-red-600/20 text-red-400 hover:bg-red-600/30">Logout</button>
+          </div>
+        </aside>
+
+        {/* MAIN */}
+        <main className="flex-1">
+          {/* HEADER */}
+          <header className="sticky top-0 z-10 bg-gray-800 border-b border-gray-700">
+            <div className="flex items-center justify-between gap-4 p-4 max-w-7xl mx-auto">
+              <div className="flex items-center gap-3">
+                <button className="md:hidden p-2 rounded hover:bg-gray-700" onClick={() => setShowSidebar((s) => !s)}>
+                  ☰
+                </button>
+                <h2 className="text-xl font-semibold">Dashboard</h2>
+                {/* Search Bar
+                
+                  <div className="ml-4 hidden sm:block">
+                    <input
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                      placeholder="Search polls, quizzes..."
+                      className="px-3 py-2 border border-gray-600 bg-gray-700 text-gray-200 rounded w-64 text-sm placeholder-gray-400"
+                    />
+                  </div>
+                
+                */}
+              </div>
+
+              <div className="flex items-center gap-3">
+                <div className="hidden sm:flex gap-2">
+                  <Link to="/host/create-poll" className="px-3 py-2 bg-indigo-600 text-white rounded hover:opacity-95">Create Poll</Link>
+                  <Link to="/host/create-quiz" className="px-3 py-2 bg-emerald-600 text-white rounded hover:opacity-95">Create Quiz</Link>
+                </div>
+
+                <div className="relative">
+                  <button className="flex items-center gap-2 px-3 py-2 border border-gray-600 bg-gray-700 rounded">
+                    <span className="w-7 h-7 bg-gray-600 rounded-full flex items-center justify-center text-sm">{user?.fullName?.charAt(0).toUpperCase()}</span>
+                    <span className="hidden sm:block">{user?.fullName}</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </header>
+
+          {/* CONTENT */}
+          <div className="max-w-7xl mx-auto p-6">
+            {/* STATS */}
+            <section className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+              <StatCard title="Total Polls" value={polls?.length} subtitle="Active & drafts" />
+              <StatCard title="Total Quizzes" value={quizzes?.length} subtitle="Published & scheduled" />
+              <StatCard title="Responses" value={totalResponses} subtitle="All time" />
+            </section>
+
+            {/* TAB TOGGLE */}
+            <section className="bg-gray-800 p-4 rounded shadow-sm mb-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Tab label="Polls" active={activeTab === "polls"} onClick={() => setActiveTab("polls")} />
+                  <Tab label="Quizzes" active={activeTab === "quizzes"} onClick={() => setActiveTab("quizzes")} />
+                  <Tab label="Both" active={activeTab === "both"} onClick={() => setActiveTab("both")} />
+                </div>
+
+                <div className="text-sm text-gray-400">Showing: <strong>{activeTab}</strong></div>
+              </div>
+
+              <div className="mt-4">
+                {(activeTab === "polls" || activeTab === "both") && (
+                  <ListSection
+                   title="Polls"
+                    items={polls}
+                    type="poll"
+                    onStatusChange={handlePollStatusChange} 
+                  />
+                )}
+
+                {(activeTab === "quizzes" || activeTab === "both") && (
+                  <div className="mt-6">
+                    <ListSection
+                     title="Quizzes"
+                      items={quizzes}
+                      type="quiz"
+                      onStatusChange={handleQuizStatusChange}
+                    />
+                  </div>
+                )}
+              </div>
+            </section>
+
+            {/* QUICK LINKS + CTA */}
+            <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="md:col-span-2">
+                <div className="p-4 bg-gray-800 rounded shadow-sm">
+                  <h3 className="font-semibold mb-2">Recent activity</h3>
+                  <p className="text-sm text-gray-400">No major activity to show. When users respond to polls or quizzes, you’ll see a summary here.</p>
+                </div>
+              </div>
+              {/*
+                <aside>
+                  <div className="p-4 bg-gray-800 rounded shadow-sm">
+                    <h4 className="font-semibold">Quick actions</h4>
+                    <div className="mt-3 flex flex-col gap-2">
+                      <button className="px-3 py-2 rounded border border-gray-600 text-left bg-gray-700 hover:bg-gray-600">Publish a Poll</button>
+                      <button className="px-3 py-2 rounded border border-gray-600 text-left bg-gray-700 hover:bg-gray-600">Schedule Quiz</button>
+                      <button className="px-3 py-2 rounded border border-gray-600 text-left bg-gray-700 hover:bg-gray-600">View Analytics</button>
+                    </div>
+                  </div>
+                </aside>
+              */}
+            </section>
+          </div>
+        </main>
+      </div>
+
+      
+    </div>
+  );
+}
+
+/* ---------- Helper components (inside single file for demo) ---------- */
+function StatCard({ title, value, subtitle }) {
+  return (
+    <div className="p-4 bg-gray-800 rounded shadow-sm flex items-center justify-between">
+      <div>
+        <div className="text-sm text-gray-400">{title}</div>
+        <div className="text-2xl font-bold mt-1">{value}</div>
+        <div className="text-xs text-gray-500 mt-1">{subtitle}</div>
+      </div>
+      <div className="w-12 h-12 bg-gray-700 rounded flex items-center justify-center">📊</div>
+    </div>
+  );
+}
+
+function Tab({ label, active, onClick }) {
+  return (
+    <button
+      onClick={onClick}
+      className={`px-3 py-2 rounded border border-gray-600 ${active ? "bg-indigo-600 text-white" : "bg-gray-700 text-gray-300 hover:bg-gray-600"}`}
     >
-      <div className="layout-container flex h-full grow flex-col">
-        <div className="gap-10 px-6 flex justify-center flex-1 py-5">
-          {/* add side bar if ever nedded */}
+      {label}
+    </button>
+  );
+}
 
-          {/* Main Content */}
-          <div className="layout-content-container flex flex-col max-w-[960px] flex-1">
-            <div className="flex flex-wrap justify-between gap-3 p-4">
-              <p className="text-white tracking-light text-[32px] font-bold leading-tight min-w-72">
-                Welcome back, {user?.fullName || "User"}
-              </p>
-            </div>
+function ListSection({ title, items, type = "poll", onStatusChange }) {
+  const statusOptions = ["draft", "active", "closed"];
 
-            {/* Stats */}
-            <div className="flex flex-wrap gap-4 p-4">
-              <div className="flex min-w-[158px] flex-1 flex-col gap-2 rounded-xl p-6 bg-[#232f48]">
-                <p className="text-white text-base font-medium leading-normal">
-                  Total Created
-                </p>
-                <p className="text-white tracking-light text-2xl font-bold leading-tight">
-                  25
-                </p>
-              </div>
-              <div className="flex min-w-[158px] flex-1 flex-col gap-2 rounded-xl p-6 bg-[#232f48]">
-                <p className="text-white text-base font-medium leading-normal">
-                  Active Now
-                </p>
-                <p className="text-white tracking-light text-2xl font-bold leading-tight">
-                  3
-                </p>
-              </div>
-              <div className="flex min-w-[158px] flex-1 flex-col gap-2 rounded-xl p-6 bg-[#232f48]">
-                <p className="text-white text-base font-medium leading-normal">
-                  Average Participation
-                </p>
-                <p className="text-white tracking-light text-2xl font-bold leading-tight">
-                  75%
-                </p>
-              </div>
-            </div>
-
-            {/* My Polls Table */}
-            <h2 className="text-white text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">
-              My Polls
-            </h2>
-            <div className="px-4 py-3">
-              <div className="flex overflow-hidden rounded-xl border border-[#324467] bg-[#111722]">
-                <table className="flex-1">
-                  <thead>
-                    <tr className="bg-[#192233]">
-                      <th className="px-4 py-3 text-center text-white w-[400px] text-sm font-medium">
-                        Title
-                      </th>
-                      <th className="px-4 py-3 text-center text-white w-60 text-sm font-medium">
-                        Status
-                      </th>
-                      <th className="px-4 py-3 text-center text-white w-[400px] text-sm font-medium">
-                        Participants
-                      </th>
-                      <th className="px-4 py-3 text-center text-white w-[400px] text-sm font-medium">
-                        Created At
-                      </th>
-                      <th className="px-4 py-3 text-center text-[#92a4c9] w-60 text-sm font-medium">
-                        Actions
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {polls.map((poll, idx) => (
-                      <tr key={idx} className="border-t border-t-[#324467]">
-                        <td className="h-[72px] px-4 py-2 w-[400px] text-white text-sm font-normal text-center">
-                          {poll.title}
-                        </td>
-                        <td className="h-[72px] px-4 py-2 w-60 text-sm font-normal">
-                          <select
-                            value={poll.status}
-                            onChange={(e) =>
-                              handleStatusChange(poll._id, e.target.value)
-                            }
-                            className={`w-[140px] h-9 rounded-lg px-3 text-sm font-medium border border-[#324467] bg-[#111722] cursor-pointer transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-[#1a2235]
-                            ${poll.status === "active" ? "text-green-400" : poll.status === "closed" ? "text-red-500" : "text-gray-400"}
-                            `}
-                          >
-                            <option
-                              className="bg-[#111722] text-gray-300"
-                              value="draft"
-                            >
-                              Draft
-                            </option>
-                            <option
-                              className="bg-[#111722] text-green-400"
-                              value="active"
-                            >
-                              Active
-                            </option>
-                            <option
-                              className="bg-[#111722] text-red-400"
-                              value="closed"
-                            >
-                              Completed
-                            </option>
-                          </select>
-                        </td>
-                        <td className="h-[72px] px-4 py-2 w-[400px] text-[#92a4c9] text-sm font-normal text-center">
-                          {poll.participants}
-                        </td>
-                        <td className="h-[72px] px-4 py-2 w-[400px] text-[#92a4c9] text-sm font-normal text-center cursor-pointer hover:underline hover:text-blue-600">
-                          {new Date(poll.createdAt).toLocaleDateString(
+  return (
+    <div>
+      <h3 className="text-lg font-semibold">{title}</h3>
+      <div className="mt-3 space-y-3">
+        {items.length === 0 && (
+          <div className="text-sm text-gray-400">
+            No {title.toLowerCase()} found.
+          </div>
+        )}
+        {items.map((it, idx) => (
+          <div
+            key={idx}
+            className="p-3 border border-gray-700 rounded flex items-center justify-between bg-gray-800"
+          >
+            <div>
+              <div className="font-medium">{it.title}</div>
+              <div className="text-xs text-gray-400">
+                {type === "poll"
+                  ? `${it.participants ?? 0} responses`
+                  : `${it.participantsCount ?? 0} attempts`}{" "}
+                • Created on {new Date(it.createdAt).toLocaleDateString(
                             "en-GB",
                             {
                               day: "2-digit",
@@ -175,103 +300,29 @@ function HostDashboard() {
                               year: "numeric",
                             }
                           )}
-                        </td>
-                        <td className="h-[72px] px-4 py-2 w-60 text-[#92a4c9] text-sm font-bold text-center tracking-[0.015em] cursor-pointer hover:underline hover:text-blue-600">
-                          View
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
               </div>
             </div>
 
-            {/* my quiz table */}
-            <h2 className="text-white text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">
-              My quizzes
-            </h2>
-            <div className="px-4 py-3">
-              <div className="flex overflow-hidden rounded-xl border border-[#324467] bg-[#111722]">
-                <table className="flex-1">
-                  <thead>
-                    <tr className="bg-[#192233]">
-                      <th className="px-4 py-3 text-center text-white w-[400px] text-sm font-medium">
-                        Title
-                      </th>
-                      <th className="px-4 py-3 text-center text-white w-60 text-sm font-medium">
-                        Status
-                      </th>
-                      <th className="px-4 py-3 text-center text-white w-[400px] text-sm font-medium">
-                        Participants
-                      </th>
-                      <th className="px-4 py-3 text-center text-white w-[400px] text-sm font-medium">
-                        Created At
-                      </th>
-                      <th className="px-4 py-3 text-center text-[#92a4c9] w-60 text-sm font-medium">
-                        Actions
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {[
-                      {
-                        title: "JavaScript Basics Quiz",
-                        status: "Active",
-                        participants: 120,
-                        createdAt: "2023-07-20",
-                      },
-                    ].map((quiz, idx) => (
-                      <tr key={idx} className="border-t border-t-[#324467]">
-                        <td className="h-[72px] px-4 py-2 w-[400px] text-white text-sm font-normal text-center">
-                          {quiz.title}
-                        </td>
-                        <td className="h-[72px] px-4 py-2 w-60 text-sm font-normal">
-                          <span
-                            className={`flex items-center justify-center rounded-full h-8 px-4 text-white text-sm ${
-                              quiz.status === "Active"
-                                ? "bg-[#232f48]"
-                                : "bg-gray-600"
-                            }`}
-                          >
-                            {quiz.status}
-                          </span>
-                        </td>
-                        <td className="h-[72px] px-4 py-2 w-[400px] text-[#92a4c9] text-sm font-normal text-center">
-                          {quiz.participants}
-                        </td>
-                        <td className="h-[72px] px-4 py-2 w-[400px] text-[#92a4c9] text-sm font-normal text-center cursor-pointer hover:underline hover:text-blue-600">
-                          {quiz.createdAt}
-                        </td>
-                        <td className="h-[72px] px-4 py-2 w-60 text-[#92a4c9] text-sm font-bold text-center tracking-[0.015em] cursor-pointer hover:underline hover:text-blue-600">
-                          View
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            {/* Bottom Buttons */}
-            <div className="flex px-4 py-3 justify-end gap-4">
-              <Link
-                to="/host/create-poll"
-                className="flex min-w-[84px] max-w-[480px] items-center justify-center rounded-full h-10 px-4 bg-[#135beb] text-white text-sm font-bold tracking-[0.015em]"
-              >
-                <span className="truncate">Create New Poll</span>
-              </Link>
-              <Link
-                to="/host/create-quiz"
-                className="flex min-w-[84px] max-w-[480px] items-center justify-center rounded-full h-10 px-4 bg-[#7f0cf2] text-white text-sm font-bold tracking-[0.015em]"
-              >
-                <span className="truncate">Create New Quiz</span>
-              </Link>
+            {/* STATUS BUTTONS */}
+            <div className="flex items-center gap-2">
+              {statusOptions.map((status) => (
+                <button
+                  key={status}
+                  onClick={() => onStatusChange(it._id, status)}
+                  className={`px-2 py-1 rounded text-sm border ${
+                    it.status === status
+                      ? "bg-indigo-600 text-white border-indigo-500"
+                      : "bg-gray-700 text-gray-300 border-gray-600 hover:bg-gray-600"
+                  }`}
+                >
+                  {status.charAt(0).toUpperCase() + status.slice(1)}
+                </button>
+              ))}
             </div>
           </div>
-        </div>
+        ))}
       </div>
     </div>
   );
 }
 
-export default HostDashboard;
