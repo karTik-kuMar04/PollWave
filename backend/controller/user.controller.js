@@ -121,8 +121,28 @@ const getMe = async (req, res, next) => {
 };
 
 
+const logout = async (req, res, next) => {
+  try {
+    // clear JWT cookie
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+    });
+
+    return res
+      .status(200)
+      .json(new apiResponse(200, null, "Logged out successfully"));
+  } catch (error) {
+    console.error("logout error:", error);
+    return next(new apiError(500, "Logout failed"));
+  }
+};
+
+
 export {
     register,
     login,
-    getMe
+    getMe,
+    logout
 }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 
 
@@ -8,6 +8,7 @@ export default function HostDashboard() {
   const [activeTab, setActiveTab] = useState("polls"); // 'polls' | 'quizzes' | 'both'
   const [showSidebar, setShowSidebar] = useState(true);
   const [loading, setLoading] = React.useState(true);
+  const navigate = useNavigate();
 
 
 
@@ -102,9 +103,27 @@ export default function HostDashboard() {
 
 
 
+
+  // logout
+  const handleLogOut = async () => {
+    try {
+      await axios.post(
+        "http://localhost:4000/api/v1/users/logout",
+        {},
+        { withCredentials: true }
+      )
+  
+      localStorage.removeItem("user");
+      navigate("/login");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  }  
+
+
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100">
-      <div className="flex h-screen">
+      <div className="flex h-full">
         {/* SIDEBAR */}
         <aside className={`hidden md:flex md:flex-col md:w-64 p-4 gap-6 bg-gray-800 border-r border-gray-700 shadow-sm ${showSidebar ? "" : "-translate-x-full"}`}>
           <div className="flex items-center gap-3">
@@ -126,7 +145,7 @@ export default function HostDashboard() {
           </nav>
 
           <div className="mt-auto">
-            <button className="w-full text-left px-3 py-2 rounded bg-red-600/20 text-red-400 hover:bg-red-600/30">Logout</button>
+            <button onClick={handleLogOut} className="w-full text-left px-3 py-2 rounded bg-red-600/20 text-red-400 hover:bg-red-600/30">Logout</button>
           </div>
         </aside>
 
@@ -272,6 +291,16 @@ function Tab({ label, active, onClick }) {
 function ListSection({ title, items, type = "poll", onStatusChange }) {
   const statusOptions = ["draft", "active", "closed"];
 
+  const handleCopyLink = (id) => {
+    // example share URL (frontend route for participants)
+    const Id = id;
+      
+
+    navigator.clipboard.writeText(Id).then(() => {
+      alert("Id copied to clipboard! share it with participants.");
+    });
+  };
+
   return (
     <div>
       <h3 className="text-lg font-semibold">{title}</h3>
@@ -305,6 +334,15 @@ function ListSection({ title, items, type = "poll", onStatusChange }) {
 
             {/* STATUS BUTTONS */}
             <div className="flex items-center gap-2">
+              {/* Copy link */}
+              <button
+                onClick={() => handleCopyLink(it._id)}
+                className="px-2 py-1 rounded text-sm border bg-gray-700 text-gray-300 hover:bg-gray-600"
+              >
+                Copy Link
+              </button>
+
+                          
               {statusOptions.map((status) => (
                 <button
                   key={status}

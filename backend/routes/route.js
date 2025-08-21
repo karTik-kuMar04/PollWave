@@ -1,5 +1,5 @@
 import express from "express";
-import { register, login, getMe } from "../controller/user.controller.js";
+import { register, login, getMe, logout } from "../controller/user.controller.js";
 import { 
   createPoll, 
   createQuiz, 
@@ -21,6 +21,7 @@ const router = express.Router();
 router.post("/register", register);
 router.post("/login", login);
 router.get("/me", verifyJWT, getMe);
+router.post("/logout", verifyJWT, logout);
 
 // polls
 router.post("/polls", verifyJWT, createPoll);
