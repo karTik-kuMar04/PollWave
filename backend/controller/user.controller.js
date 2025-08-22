@@ -9,46 +9,60 @@ const safeUser  = (userDoc) => {
 
 
 // User Registration
-const register = async(req, res, next) => {
-    try {
-        const { fullName, email, password, role} = req.body;
-        // check if user send all info's
-        if (![fullName, email, password].every(Boolean)) {
-            throw new apiError(400, "All feilds are required")
-        }
+const register = async (req, res, next) => {
+  try {
+    const { fullName, email, password, role } = req.body;
 
-        const exists = await User.findOne({ $or: [{ email }] });
-        // check user provided credentials are exists or not
-        if (exists) {
-            throw new apiError(409, "User already exists")
-        }
-
-        const accessToken = user.generateAccessToken();
-        const refreshToken = user.generateRefreshToken();
-
-
-        const user = await User.create({ email, password, fullName, role});
-
-        if (!user) {
-            throw new apiError(500, 'something went wrong while registering user')
-        }
-
-        res.cookie("accessToken", accessToken, {
-          httpOnly: true,
-          secure: true,
-          sameSite: "none",
-          maxAge: 1000 * 60 * 60
-        });
-
-        return res.status(201).json({
-          success: true,
-          user: safeUser(user),
-          message: "User Registered Successfully"
-        });
-    } catch (error) {
-        next(error)
+    if (![fullName, email, password].every(Boolean)) {
+      throw new apiError(400, "All fields are required");
     }
-}
+
+    const exists = await User.findOne({ email });
+    if (exists) {
+      throw new apiError(409, "User already exists");
+    }
+
+    // First create the user
+    const user = await User.create({ email, password, fullName, role });
+
+    if (!user) {
+      throw new apiError(500, "Something went wrong while registering user");
+    }
+
+    // Now generate tokens
+    const accessToken = user.generateAccessToken();
+    const refreshToken = user.generateRefreshToken();
+
+    // Optionally save refreshToken in DB
+    user.refreshToken = refreshToken;
+    await user.save({ validateBeforeSave: false });
+
+    // Set cookies
+    res.cookie("accessToken", accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      maxAge: 1000 * 60 * 60,
+    });
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+    });
+
+    return res.status(201).json({
+      success: true,
+      user: safeUser(user),
+      message: "User Registered Successfully",
+    });
+  } catch (error) {
+    console.error("Register Error:", error);
+    next(error);
+  }
+};
+
 
 
 // User Login
