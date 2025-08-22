@@ -292,7 +292,7 @@ export const getPollById = async (req, res, next) => {
 
 export const getQuizById = async (req, res) => {
   try {
-    const quiz = await Quiz.findById(req.params.quizId).populate("host", "name email");
+    const quiz = await Quiz.findById(req.params.quizId).populate("host", "fullName email");
     if (!quiz) {
       return res.status(404).json({ message: "Quiz not found" });
     }
