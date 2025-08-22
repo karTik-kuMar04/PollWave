@@ -1,5 +1,4 @@
 import jwt from "jsonwebtoken";
-import { apiError } from "../utils/apiError.js";
 import { User } from "../models/user.model.js";
 
 const verifyJWT = async (req, res, next) => {
@@ -24,11 +23,26 @@ const verifyJWT = async (req, res, next) => {
       return res.status(401).json({ message: "User not found" });
     }
 
-    req.user = user; // Attach full user object
+    // Optional: attach minimal safe info to req.user
+    req.user = {
+      _id: user._id,
+      fullName: user.fullName,
+      email: user.email,
+      role: user.role
+    };
+
     next();
   } catch (error) {
     console.error("JWT verification error:", error);
-    return res.status(401).json({ message: "Invalid or expired token" });
+
+    // Detect specific JWT errors
+    if (error.name === "TokenExpiredError") {
+      return res.status(401).json({ message: "Token expired, please login again" });
+    } else if (error.name === "JsonWebTokenError") {
+      return res.status(401).json({ message: "Invalid token" });
+    }
+
+    return res.status(401).json({ message: "Authentication failed" });
   }
 };
 
