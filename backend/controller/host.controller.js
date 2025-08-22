@@ -314,9 +314,7 @@ export const getMyPolls = async (req, res, next) => {
       .sort({createdAt: -1})
       .select("title status participants createdAt")
 
-    if (!polls || polls.length === 0) {
-      throw new apiError(404, "No polls found for this user");
-    }
+    
 
     res.status(200).json({
       success: true,
@@ -334,9 +332,7 @@ export const getMyQuiz = async (req, res, next) => {
       .sort({ createdAt: -1 })
       .select("title status participantsCount createdAt");
 
-    if (!quizzes || quizzes.length === 0) {
-      throw new apiError(404, "No quizzes found for this user");
-    }
+    
 
     res.status(200).json({
       success: true,
