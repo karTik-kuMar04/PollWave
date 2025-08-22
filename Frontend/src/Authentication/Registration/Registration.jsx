@@ -4,6 +4,8 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import axios from "axios"
 import { API_BASE_URL } from "../../api.js";
 
+
+
 export default function Registration() {
   const [searchParams, setSearchParams] = useSearchParams();
   const role = searchParams.get("role");
@@ -41,9 +43,6 @@ export default function Registration() {
           role: data.role
         },
         {
-          headers: {
-            "Content-Type": "application/json"
-          },
           withCredentials: true
         }
       )

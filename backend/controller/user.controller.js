@@ -30,6 +30,13 @@ const register = async(req, res, next) => {
             throw new apiError(500, 'something went wrong while registering user')
         }
 
+        res.cookie("accessToken", accessToken, {
+          httpOnly: true,
+          secure: true,
+          sameSite: "none",
+          maxAge: 1000 * 60 * 60
+        });
+
         return res
         .status(200)
         .json( new apiResponse(201, {user:safeUser(user)}, "User Registered Succesfully"))
@@ -74,6 +81,14 @@ const login = async(req, res, next) => {
             httpOnly: true,
             secure: true
         };
+
+
+        res.cookie("accessToken", accessToken, {
+          httpOnly: true,
+          secure: true,
+          sameSite: "none",
+          maxAge: 1000 * 60 * 60
+        });
 
         return res
             .status(200)
@@ -124,13 +139,21 @@ const getMe = async (req, res, next) => {
 const logout = async (req, res, next) => {
   try {
     // Overwrite cookie before clearing (extra safety)
-    res.cookie("token", "", {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      expires: new Date(0), // Expire immediately
-      path: "/", // Clear from root
-    });
+    res.cookie("accessToken", "", {
+  httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "none",
+    expires: new Date(0),
+    path: "/"
+  });
+  res.cookie("refreshToken", "", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "none",
+    expires: new Date(0),
+    path: "/"
+  });
+
 
     return res
       .status(200)
