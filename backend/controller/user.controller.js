@@ -23,6 +23,9 @@ const register = async(req, res, next) => {
             throw new apiError(409, "User already exists")
         }
 
+        const accessToken = user.generateAccessToken();
+        const refreshToken = user.generateRefreshToken();
+
 
         const user = await User.create({ email, password, fullName, role});
 
@@ -37,9 +40,11 @@ const register = async(req, res, next) => {
           maxAge: 1000 * 60 * 60
         });
 
-        return res
-        .status(200)
-        .json( new apiResponse(201, {user:safeUser(user)}, "User Registered Succesfully"))
+        return res.status(201).json({
+          success: true,
+          user: safeUser(user),
+          message: "User Registered Successfully"
+        });
     } catch (error) {
         next(error)
     }
