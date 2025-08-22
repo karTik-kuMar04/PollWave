@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
+import { API_BASE_URL } from "../../api.js";
 
 const Quiz = () => {
   const { quizId } = useParams();
@@ -11,7 +12,7 @@ const Quiz = () => {
   // Fetch quiz
   useEffect(() => {
     axios
-      .get(`http://localhost:4000/api/v1/users/quiz/${quizId}`, {
+      .get(`${API_BASE_URL}/quiz/${quizId}`, {
         withCredentials: true,
       })
       .then((res) => setQuiz(res.data.quiz))
@@ -42,7 +43,7 @@ const Quiz = () => {
 
     try {
       const res = await axios.post(
-        `http://localhost:4000/api/v1/users/quizzes/${quizId}/respond`,
+        `${API_BASE_URL}/quizzes/${quizId}/respond`,
         payload,
         { withCredentials: true }
       );

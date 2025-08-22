@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import { API_BASE_URL } from "../../api.js";
 
 const PollCard = () => {
   const [poll, setPoll] = useState(null);
@@ -12,7 +13,7 @@ const PollCard = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:4000/api/v1/users/polls/${pollId}`, { withCredentials: true })
+      .get(`${API_BASE_URL}/polls/${pollId}`, { withCredentials: true })
       .then((res) => {
         setPoll(res.data.poll);
         setSelectedOption(null); // only one option allowed
@@ -31,7 +32,7 @@ const PollCard = () => {
     setLoading(true);
     try {
       await axios.post(
-        `http://localhost:4000/api/v1/users/polls/${pollId}/respond`,
+        `${API_BASE_URL}/polls/${pollId}/respond`,
         { selectedOptionIds: [selectedOption] }, // single string only
         { withCredentials: true }
       );

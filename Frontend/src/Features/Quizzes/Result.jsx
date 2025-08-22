@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import { API_BASE_URL } from "../../api.js";
+
 
 export default function Result() {
   const { quizId, resultId } = useParams();
@@ -19,7 +21,7 @@ export default function Result() {
       try {
 
         const res = await axios.get(
-          `http://localhost:4000/api/v1/users/quizzes/${quizId}/result/${resultId}`,
+          `${API_BASE_URL}/quizzes/${quizId}/result/${resultId}`,
           {
             withCredentials: true
           }

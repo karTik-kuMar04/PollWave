@@ -1,6 +1,8 @@
 import { Navigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { API_BASE_URL } from "./api.js";
+
 
 export default function ProtectedRoute({ children, allowedRole }) {
   const [loading, setLoading] = useState(true);
@@ -10,7 +12,7 @@ export default function ProtectedRoute({ children, allowedRole }) {
   useEffect(() => {
     setLoading(true);
     axios
-      .get("http://localhost:4000/api/v1/users/me", { withCredentials: true })
+      .get(`${API_BASE_URL}/me`, { withCredentials: true })
       .then((res) => {
         setUser(res.data.user);
         setLoading(false);

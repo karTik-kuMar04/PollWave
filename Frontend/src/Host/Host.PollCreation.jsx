@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm, useFieldArray } from "react-hook-form";
 import axios from "axios";
+import { API_BASE_URL } from "../api.js";
 
 const CreatePoll = () => {
   const [showConfirm, setShowConfirm] = useState(false);
@@ -57,7 +58,7 @@ const CreatePoll = () => {
   const handleFinalSubmit = async () => {
     try {
       const res = await axios.post(
-        "http://localhost:4000/api/v1/users/polls",
+        `${API_BASE_URL}/polls`,
         {
           title: formPreview.title,
           description: formPreview.description,

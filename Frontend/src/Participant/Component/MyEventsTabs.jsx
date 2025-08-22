@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-
+import { API_BASE_URL } from "../../api.js";
 
 const tabs = [
   { id: "quizzes", label: "Quizzes" },
@@ -25,7 +25,7 @@ const MyEventsTabs = () => {
         setErrorQuizzes("");
         setLoadingQuizzes(true);
         const res = await axios.get(
-          "http://localhost:4000/api/v1/users/myquiz/responses",
+          `${API_BASE_URL}/myquiz/responses`,
           { withCredentials: true }
         );
 
@@ -56,7 +56,7 @@ const MyEventsTabs = () => {
         setErrorPolls("");
         setLoadingPolls(true);
         const res = await axios.get(
-          "http://localhost:4000/api/v1/users/mypolls/responses",
+          `${API_BASE_URL}/mypolls/responses`,
           { withCredentials: true }
         );
         setPolls(res.data.responseOnPoll || []);

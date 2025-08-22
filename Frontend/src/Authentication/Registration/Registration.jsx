@@ -2,6 +2,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import axios from "axios"
+import { API_BASE_URL } from "../../api.js";
 
 export default function Registration() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -32,7 +33,7 @@ export default function Registration() {
 
     try {
       const res = await axios.post(
-        "http://localhost:4000/api/v1/users/register",
+        `${API_BASE_URL}/register`,
         {
           fullName: data.fullName,
           email: data.email,

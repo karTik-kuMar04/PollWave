@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-
+import { API_BASE_URL } from "../api.js";
 
 
 export default function HostDashboard() {
   const [activeTab, setActiveTab] = useState("polls"); // 'polls' | 'quizzes' | 'both'
   const [showSidebar, setShowSidebar] = useState(true);
-  const [loading, setLoading] = React.useState(true);
+  const [, setLoading] = React.useState(true);
   const navigate = useNavigate();
 
 
@@ -22,7 +22,7 @@ export default function HostDashboard() {
 
   React.useEffect(() => {
     axios
-      .get("http://localhost:4000/api/v1/users/me", { withCredentials: true })
+      .get(`${API_BASE_URL}/me`, { withCredentials: true })
       .then((res) => setUser(res.data.user))
       .catch((err) => console.error(err));
   }, []);
@@ -31,8 +31,8 @@ export default function HostDashboard() {
     const fetchData = async () => {
       try {
         const [pollRes, quizRes] = await Promise.all([
-          axios.get("http://localhost:4000/api/v1/users/mypolls", { withCredentials: true }),
-          axios.get("http://localhost:4000/api/v1/users/myquiz", { withCredentials: true }),
+          axios.get(`${API_BASE_URL}/mypolls`, { withCredentials: true }),
+          axios.get(`${API_BASE_URL}/myquiz`, { withCredentials: true }),
         ]);
 
         setPolls(pollRes.data.polls || []);
@@ -50,7 +50,7 @@ export default function HostDashboard() {
   const handlePollStatusChange = async (pollId, newStatus) => {
     try {
       await axios.patch(
-        `http://localhost:4000/api/v1/users/polls/${pollId}/status`,
+        `${API_BASE_URL}/polls/${pollId}/status`,
         { status: newStatus },
         { withCredentials: true }
       );
@@ -71,7 +71,7 @@ export default function HostDashboard() {
   const handleQuizStatusChange = async (quizId, newStatus) => {
     try {
       await axios.patch(
-        `http://localhost:4000/api/v1/users/quizzes/${quizId}/status`,
+        `${API_BASE_URL}/quizzes/${quizId}/status`,
         { status: newStatus },
         { withCredentials: true }
       );
@@ -108,7 +108,7 @@ export default function HostDashboard() {
   const handleLogOut = async () => {
     try {
       await axios.post(
-        "http://localhost:4000/api/v1/users/logout",
+        `${API_BASE_URL}/logout`,
         {},
         { withCredentials: true } // must include this!
       );

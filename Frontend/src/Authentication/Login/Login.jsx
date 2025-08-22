@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { API_BASE_URL } from "../../api.js";
 
 export default function LoginPage() {
   const navigate = useNavigate(); // lowercase variable name
@@ -13,7 +14,7 @@ export default function LoginPage() {
     setLoading(true);
     try {
       const res = await axios.post(
-        "http://localhost:4000/api/v1/users/login",
+        `${API_BASE_URL}/login`,
         data,
         { withCredentials: true }
       );

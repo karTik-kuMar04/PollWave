@@ -2,6 +2,7 @@ import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { CiBellOn, CiUser } from "react-icons/ci";
 import axios from "axios";
+import { API_BASE_URL } from "../../api.js";
 
 const Header = () => {
   const [openMenu, setOpenMenu] = React.useState(false);
@@ -10,7 +11,7 @@ const Header = () => {
   const handleLogOut = async () => {
     try {
       await axios.post(
-        "http://localhost:4000/api/v1/users/logout",
+        `${API_BASE_URL}/logout`,
         {},
         { withCredentials: true } // must include this!
       );

@@ -3,6 +3,8 @@ import { useForm, useFieldArray } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
+import { API_BASE_URL } from "../api.js";
+
 
 export default function CreateQuizEnhanced() {
   const [showConfirm, setShowConfirm] = useState(false);
@@ -87,7 +89,7 @@ export default function CreateQuizEnhanced() {
     setLoading(true);
     try {
       await axios.post(
-        "http://localhost:4000/api/v1/users/quizzes",
+        `${API_BASE_URL}/quizzes`,
         formPreview,
         { withCredentials: true }
       );
