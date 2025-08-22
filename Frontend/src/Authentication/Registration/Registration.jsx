@@ -47,7 +47,7 @@ export default function Registration() {
         }
       )
 
-      const role = res.data.data.user.role;
+      const role = res.data.user.role;
 
       // redirect based on their role
       if (role === "host") {
