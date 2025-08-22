@@ -16,6 +16,7 @@ import Quiz from './Features/Quizzes/Quizzes';
 import NotFound from './Webpage/NotFound';
 import JoinPage from './Participant/Pages/Join';
 import Result from './Features/Quizzes/Result';
+import ForgetPasswordPage from './Authentication/ForgetPassword';
 
 const App = () => {
   return (
@@ -25,6 +26,7 @@ const App = () => {
       <Route path="registration" element={<Registration />} />
       <Route path="login" element={<LoginPage />} />
       <Route path="/quiz/:quizId/result/:resultId" element={<Result />} />
+      <Route path="/retrive-password" element={<ForgetPasswordPage />} />
 
 
       {/* Host Protected Routes */}

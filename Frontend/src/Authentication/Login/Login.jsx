@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 
 export default function LoginPage() {
   const navigate = useNavigate(); // lowercase variable name
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm();
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [, setLoading] = useState(false);
 
   const onSubmit = async (data) => {
     setLoading(true);
@@ -75,6 +75,18 @@ export default function LoginPage() {
             </button>
             {errors.password && <p className="text-red-400">{errors.password.message}</p>}
           </div>
+          <div className="text-right">
+            <Link
+              to="/retrive-password"
+              className="text-sm font-medium text-purple-400 hover:text-purple-300 hover:underline underline-offset-4 transition"
+            >
+              Forgot Password?
+            </Link>
+          </div>
+
+
+
+
 
           {/* Submit */}
           <button

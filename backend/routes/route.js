@@ -1,5 +1,5 @@
 import express from "express";
-import { register, login, getMe, logout } from "../controller/user.controller.js";
+import { register, login, getMe, logout, forgotPassword } from "../controller/user.controller.js";
 import { 
   createPoll, 
   createQuiz, 
@@ -25,6 +25,7 @@ router.post("/register", register);
 router.post("/login", login);
 router.get("/me", verifyJWT, getMe);
 router.post("/logout", verifyJWT, logout);
+router.post("/forgot-password", forgotPassword);
 
 // polls
 router.post("/polls", verifyJWT, createPoll);

@@ -142,10 +142,38 @@ const logout = async (req, res, next) => {
 };
 
 
+const forgotPassword = async (req, res, next) => {
+  try {
+    const { email, fullName, newPassword } = req.body;
+
+    if (!email || !fullName || !newPassword) {
+      return next(new apiError("All fields are required", 400));
+    }
+
+    const user = await User.findOne({ email, fullName });
+    if (!user) {
+      return next(new apiError("User not found", 404));
+    }
+
+    // just assign — pre("save") hook will hash automatically
+    user.password = newPassword;
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Password updated successfully. You can now log in.",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
 
 export {
     register,
     login,
     getMe,
-    logout
+    logout,
+    forgotPassword
 }
