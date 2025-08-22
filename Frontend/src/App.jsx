@@ -15,6 +15,7 @@ import PollCard from './Features/Polling/Polling';
 import Quiz from './Features/Quizzes/Quizzes';
 import NotFound from './Webpage/NotFound';
 import JoinPage from './Participant/Pages/Join';
+import Result from './Features/Quizzes/Result';
 
 const App = () => {
   return (
@@ -23,6 +24,8 @@ const App = () => {
       <Route index element={<Landing />} />
       <Route path="registration" element={<Registration />} />
       <Route path="login" element={<LoginPage />} />
+      <Route path="/quiz/:quizId/result/:resultId" element={<Result />} />
+
 
       {/* Host Protected Routes */}
       <Route

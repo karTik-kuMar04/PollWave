@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 const Quiz = () => {
   const { quizId } = useParams();
@@ -30,6 +30,8 @@ const Quiz = () => {
     quiz && quiz.questions.every((q) => answers[q._id] !== undefined);
 
   // Submit quiz
+  const navigate = useNavigate();
+
   const submit = async () => {
     const payload = {
       answers: Object.entries(answers).map(([questionId, selectedIndex]) => ({
@@ -44,7 +46,9 @@ const Quiz = () => {
         payload,
         { withCredentials: true }
       );
-      alert(`Score: ${res.data.result.score}/${res.data.result.maxScore}`);
+
+      // redirect to result page with responseId
+      navigate(`/quiz/${quizId}/result/${res.data.result._id}`);
     } catch (err) {
       alert(err.response?.data?.message || "Failed to submit quiz");
     }

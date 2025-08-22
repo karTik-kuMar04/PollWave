@@ -5,6 +5,7 @@ import { Quiz } from "../models/quiz.model.js";
 import { QuizResult } from "../models/quizResult.model.js";
 import { apiError } from "../utils/apiError.js";
 
+
 /* --------------------------
    Create Poll (host only)
    POST /api/host/polls
@@ -431,3 +432,71 @@ export const getMyPollsResponses = async (req, res, next) => {
   }
 
 }
+
+
+export const getMyResonponseOnQuiz = async (req, res, next) => {
+  try {
+    const participantId = req.user?._id;
+    
+    if (!participantId) {
+      throw new apiError(401, "Unauthorized access");
+    }
+
+    const responceOnQuiz = await QuizResult.find({ user: participantId })
+      .sort({ createdAt: -1 })
+      .populate("quiz", "title questions")
+      .select("score maxScore passed attemptNumber createdAt quiz");
+
+
+    if (!responceOnQuiz || responceOnQuiz.length === 0) {
+      throw new apiError(404, "You have not attempted any quizzes yet");
+    }
+
+    res.status(200).json({
+      success: true,
+      responceOnQuiz,
+    });
+  } catch (error) {
+    console.error("Error in /quiz-responses:", error.message);
+    console.error(error.stack);
+    return res.status(500).json({ success: false, message: error.message });
+  }
+}
+
+
+
+
+
+export const getQuizResult = async (req, res) => {
+  try {
+    const { quizId, resultId } = req.params;
+
+    // Make sure quizId and userId are valid ObjectId
+    if (!mongoose.Types.ObjectId.isValid(quizId) || !mongoose.Types.ObjectId.isValid(resultId)) {
+      return res.status(400).json({ message: "Invalid quizId or userId" });
+    }
+
+    const result = await QuizResult.findOne({
+      _id: resultId,
+      quiz: quizId,
+    })
+      .populate({
+        path: "quiz",
+        select: "title description questions",
+        populate: {
+          path: "questions",
+          select: "questionText options correctAnswer"
+        }
+      });
+
+
+    if (!result) {
+      return res.status(404).json({ message: "Result not found" });
+    }
+
+    res.status(200).json(result);
+  } catch (err) {
+    console.error("getQuizResult error:", err);
+    res.status(500).json({ message: "Failed to fetch quiz result" });
+  }
+};

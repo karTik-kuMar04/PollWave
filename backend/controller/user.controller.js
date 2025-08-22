@@ -123,11 +123,13 @@ const getMe = async (req, res, next) => {
 
 const logout = async (req, res, next) => {
   try {
-    // clear JWT cookie
-    res.clearCookie("token", {
+    // Overwrite cookie before clearing (extra safety)
+    res.cookie("token", "", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
+      expires: new Date(0), // Expire immediately
+      path: "/", // Clear from root
     });
 
     return res
@@ -138,6 +140,7 @@ const logout = async (req, res, next) => {
     return next(new apiError(500, "Logout failed"));
   }
 };
+
 
 
 export {

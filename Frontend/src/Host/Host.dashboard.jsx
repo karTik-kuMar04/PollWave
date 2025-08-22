@@ -110,15 +110,18 @@ export default function HostDashboard() {
       await axios.post(
         "http://localhost:4000/api/v1/users/logout",
         {},
-        { withCredentials: true }
-      )
-  
+        { withCredentials: true } // must include this!
+      );
+
+      // Remove client-side stored user data
       localStorage.removeItem("user");
-      navigate("/login");
+
+      // Use replace so back button doesn’t go back to dashboard
+      navigate("/login", { replace: true });
     } catch (error) {
       console.error("Logout failed:", error);
     }
-  }  
+  }; 
 
 
   return (

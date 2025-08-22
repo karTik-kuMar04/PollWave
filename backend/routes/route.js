@@ -11,9 +11,12 @@ import {
   pollStatusUpdate,
   getMyPollsResponses,
   getMyQuiz,
-  quizStatusUpdate
+  quizStatusUpdate,
+  getMyResonponseOnQuiz,
+  getQuizResult
 } from "../controller/host.controller.js";
 import { verifyJWT } from "../middlewares/auth.middlewares.js";
+import { get } from "mongoose";
 
 const router = express.Router();
 
@@ -38,5 +41,7 @@ router.get("/quiz/:quizId", getQuizById);
 router.post("/quizzes/:quizId/respond", verifyJWT, attemptQuiz);
 router.patch("/quizzes/:quizId/status", quizStatusUpdate);
 router.get("/myquiz", verifyJWT, getMyQuiz);
+router.get("/myquiz/responses", verifyJWT, getMyResonponseOnQuiz);
+router.get("/quizzes/:quizId/result/:resultId", verifyJWT,  getQuizResult);
 
 export default router;
