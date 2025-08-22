@@ -175,7 +175,8 @@ const forgotPassword = async (req, res, next) => {
 
     const user = await User.findOne({ email, fullName });
     if (!user) {
-      return next(new apiError("User not found", 404));
+      return next(new apiError(400, "All fields are required"));
+
     }
 
     // just assign — pre("save") hook will hash automatically
