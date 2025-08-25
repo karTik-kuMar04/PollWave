@@ -193,19 +193,19 @@ export default function HostDashboard() {
                 title="Total Polls"
                 value={polls?.length}
                 subtitle="Active & drafts"
-                accent="from-cyan-500 to-blue-500"
+                gradient="from-cyan-500/30 to-blue-600/40"
               />
               <StatCard
                 title="Total Quizzes"
                 value={quizzes?.length}
                 subtitle="Published & scheduled"
-                accent="from-pink-400 to-violet-500"
+                gradient="from-purple-500/30 to-pink-600/40"
               />
               <StatCard
                 title="Responses"
                 value={totalResponses}
                 subtitle="All time"
-                accent="from-lime-300 to-yellow-400"
+                gradient="from-emerald-500/30 to-teal-600/40"
               />
             </section>
 
@@ -267,24 +267,15 @@ export default function HostDashboard() {
   );
 }
 
-/* ---------- Helper components (inside single file for demo) ---------- */
-function StatCard({ title, value, subtitle, accent = "from-cyan-500 to-blue-500" }) {
+function StatCard({ title, value, subtitle, gradient }) {
   return (
-    <div className="p-4 rounded-lg bg-gradient-to-br from-[#07101a]/50 to-[#0b0c10]/40 border border-gray-800 shadow-lg flex items-center justify-between">
+    <div 
+      className={`p-4 rounded-lg border border-gray-800 shadow-lg flex items-center justify-between bg-gradient-to-br ${gradient}`}
+    >
       <div>
         <div className="text-sm text-gray-400">{title}</div>
         <div className="text-2xl font-extrabold mt-1 text-white">{value}</div>
         <div className="text-xs text-gray-400 mt-1">{subtitle}</div>
-      </div>
-
-      <div className="ml-4 flex items-center gap-3">
-        <div
-          className={`w-10 h-10 rounded-lg bg-gradient-to-br ${accent} flex items-center justify-center shadow-md transform hover:-translate-y-0.5`}
-          aria-hidden
-        >
-          {/* subtle bright dot */}
-          <div className="w-3 h-3 rounded-full bg-white/90" />
-        </div>
       </div>
     </div>
   );
