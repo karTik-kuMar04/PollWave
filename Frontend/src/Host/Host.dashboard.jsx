@@ -3,28 +3,16 @@ import axios from "axios";
 import { Link, useNavigate, NavLink } from "react-router-dom";
 import { API_BASE_URL } from "../api.js";
 
-
-
-
-
-
 export default function HostDashboard() {
   const [activeTab, setActiveTab] = useState("polls"); // 'polls' | 'quizzes' | 'both'
   const [loading, setLoading] = React.useState(true);
   const navigate = useNavigate();
 
-
   const [openMenu, setOpenMenu] = useState(false);
-
-
-
-
-
-
 
   const [user, setUser] = React.useState();
   const [polls, setPolls] = React.useState([]);
-  const [quizzes, setQuizzes] = React.useState([])
+  const [quizzes, setQuizzes] = React.useState([]);
 
   React.useEffect(() => {
     axios
@@ -71,9 +59,6 @@ export default function HostDashboard() {
     }
   };
 
-
-  
-
   const handleQuizStatusChange = async (quizId, newStatus) => {
     try {
       await axios.patch(
@@ -87,14 +72,11 @@ export default function HostDashboard() {
           q._id === quizId ? { ...q, status: newStatus } : q
         )
       );
-    } catch (error) { 
+    } catch (error) {
       console.error("Error updating quiz status:", error);
-    }  
-  }
+    }
+  };
 
-
-
-    // inside HostDashboard component, before return
   const totalPollParticipants = polls.reduce(
     (sum, p) => sum + (p.participants ?? 0),
     0
@@ -106,9 +88,6 @@ export default function HostDashboard() {
   );
 
   const totalResponses = totalPollParticipants + totalQuizParticipants;
-
-
-
 
   // logout
   const handleLogOut = async () => {
@@ -127,63 +106,75 @@ export default function HostDashboard() {
     } catch (error) {
       console.error("Logout failed:", error);
     }
-  }; 
+  };
 
-  
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen text-lg">
-        <div className="w-6 h-6 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mr-3"></div>
+      <div className="flex items-center justify-center min-h-screen text-lg bg-gray-900 text-gray-100">
+        <div className="w-6 h-6 border-4 border-cyan-400 border-t-transparent rounded-full animate-spin mr-3"></div>
         Loading dashboard…
       </div>
     );
-  }   
+  }
 
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100">
       <div className="flex h-full">
-
-
         {/* MAIN */}
         <main className="flex-1">
           {/* HEADER */}
-          <header className="sticky top-0 z-10 bg-gray-800 border-b border-gray-700">
+          <header className="sticky top-0 z-10 bg-[#0b0b12] border-b border-gray-800">
             <div className="flex items-center justify-between gap-4 p-4 max-w-7xl mx-auto">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-lg flex items-center justify-center text-white font-bold">PW</div>
+                <div className="w-10 h-10 bg-gradient-to-br from-cyan-400 via-violet-500 to-pink-500 rounded-lg flex items-center justify-center text-black font-bold shadow-lg">
+                  PW
+                </div>
                 <div>
-                  <h3 className="font-semibold">PollWave</h3>
+                  <h3 className="font-semibold text-cyan-300">PollWave</h3>
                   <p className="text-xs text-gray-400">Host Dashboard</p>
                 </div>
               </div>
-              
 
               <div className="flex items-center gap-3">
                 <div className="hidden sm:flex gap-2">
-                  <Link to="/host/create-poll" className="px-3 py-2 bg-indigo-600 text-white rounded hover:opacity-95">Create Poll</Link>
-                  <Link to="/host/create-quiz" className="px-3 py-2 bg-emerald-600 text-white rounded hover:opacity-95">Create Quiz</Link>
+                  <Link
+                    to="/host/create-poll"
+                    className="px-3 py-2 rounded bg-gradient-to-r from-cyan-400 to-violet-500 text-black font-medium shadow-md transform hover:scale-[1.02]"
+                  >
+                    Create Poll
+                  </Link>
+                  <Link
+                    to="/host/create-quiz"
+                    className="px-3 py-2 rounded bg-gradient-to-r from-lime-300 to-amber-400 text-black font-medium shadow-md transform hover:scale-[1.02]"
+                  >
+                    Create Quiz
+                  </Link>
                 </div>
 
                 <div className="relative">
-                  <button onClick={() => setOpenMenu((s) => !s)} className="flex items-center gap-2 px-3 py-2 border border-gray-600 bg-gray-700 rounded">
-                    <span className="w-7 h-7 bg-gray-600 rounded-full flex items-center justify-center text-sm">{user?.fullName?.charAt(0).toUpperCase()}</span>
-                    <span className="hidden sm:block">{user?.fullName}</span>
+                  <button
+                    onClick={() => setOpenMenu((s) => !s)}
+                    className="flex items-center gap-2 px-3 py-2 border border-gray-700 bg-[#0f1222] rounded hover:shadow-[0_4px_18px_rgba(0,0,0,0.6)]"
+                  >
+                    <span className="w-7 h-7 bg-gradient-to-br from-violet-500 to-pink-400 rounded-full flex items-center justify-center text-sm font-semibold text-black">
+                      {user?.fullName?.charAt(0).toUpperCase()}
+                    </span>
+                    <span className="hidden sm:block text-cyan-200">{user?.fullName}</span>
                   </button>
                   {openMenu && (
                     <div
                       onMouseLeave={() => setOpenMenu(false)}
-                      className="absolute right-0 mt-2 w-44 rounded-lg border border-[#1c1e32] bg-[#151735] shadow-xl"
+                      className="absolute right-0 mt-2 w-44 rounded-lg border border-[#1c1e32] bg-gradient-to-b from-[#0f1222] to-[#0b0d18] shadow-xl overflow-hidden"
                     >
-                      
                       <NavLink
                         to="/settings"
-                        className="block px-3 py-2 text-sm text-gray-200 hover:bg-[#1c1e32]"
+                        className="block px-3 py-2 text-sm text-gray-200 hover:bg-[#111126]"
                       >
                         Settings
                       </NavLink>
                       <button
                         onClick={handleLogOut}
-                        className="w-full text-left px-3 py-2 text-sm text-rose-300 hover:bg-[#2a1320]"
+                        className="w-full text-left px-3 py-2 text-sm text-pink-300 hover:bg-[#22061a]"
                       >
                         Logout
                       </button>
@@ -198,37 +189,69 @@ export default function HostDashboard() {
           <div className="max-w-7xl mx-auto p-6">
             {/* STATS */}
             <section className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-              <StatCard title="Total Polls" value={polls?.length} subtitle="Active & drafts" />
-              <StatCard title="Total Quizzes" value={quizzes?.length} subtitle="Published & scheduled" />
-              <StatCard title="Responses" value={totalResponses} subtitle="All time" />
+              <StatCard
+                title="Total Polls"
+                value={polls?.length}
+                subtitle="Active & drafts"
+                accent="from-cyan-500 to-blue-500"
+              />
+              <StatCard
+                title="Total Quizzes"
+                value={quizzes?.length}
+                subtitle="Published & scheduled"
+                accent="from-pink-400 to-violet-500"
+              />
+              <StatCard
+                title="Responses"
+                value={totalResponses}
+                subtitle="All time"
+                accent="from-lime-300 to-yellow-400"
+              />
             </section>
 
             {/* TAB TOGGLE */}
-            <section className="bg-gray-800 p-4 rounded shadow-sm mb-6">
+            <section className="bg-[#0c0c14] p-4 rounded shadow-sm mb-6 border border-gray-800">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Tab label="Polls" active={activeTab === "polls"} onClick={() => setActiveTab("polls")} />
-                  <Tab label="Quizzes" active={activeTab === "quizzes"} onClick={() => setActiveTab("quizzes")} />
-                  <Tab label="Both" active={activeTab === "both"} onClick={() => setActiveTab("both")} />
+                  <Tab
+                    label="Polls"
+                    active={activeTab === "polls"}
+                    onClick={() => setActiveTab("polls")}
+                    color="cyan"
+                  />
+                  <Tab
+                    label="Quizzes"
+                    active={activeTab === "quizzes"}
+                    onClick={() => setActiveTab("quizzes")}
+                    color="violet"
+                  />
+                  <Tab
+                    label="Both"
+                    active={activeTab === "both"}
+                    onClick={() => setActiveTab("both")}
+                    color="lime"
+                  />
                 </div>
 
-                <div className="text-sm text-gray-400">Showing: <strong>{activeTab}</strong></div>
+                <div className="text-sm text-gray-400">
+                  Showing: <strong className="text-cyan-200">{activeTab}</strong>
+                </div>
               </div>
 
               <div className="mt-4">
                 {(activeTab === "polls" || activeTab === "both") && (
                   <ListSection
-                   title="Polls"
+                    title="Polls"
                     items={polls}
                     type="poll"
-                    onStatusChange={handlePollStatusChange} 
+                    onStatusChange={handlePollStatusChange}
                   />
                 )}
 
                 {(activeTab === "quizzes" || activeTab === "both") && (
                   <div className="mt-6">
                     <ListSection
-                     title="Quizzes"
+                      title="Quizzes"
                       items={quizzes}
                       type="quiz"
                       onStatusChange={handleQuizStatusChange}
@@ -237,36 +260,53 @@ export default function HostDashboard() {
                 )}
               </div>
             </section>
-
-
-            
           </div>
         </main>
       </div>
-
-      
     </div>
   );
 }
 
 /* ---------- Helper components (inside single file for demo) ---------- */
-function StatCard({ title, value, subtitle }) {
+function StatCard({ title, value, subtitle, accent = "from-cyan-500 to-blue-500" }) {
   return (
-    <div className="p-4 bg-gray-800 rounded shadow-sm flex items-center justify-between">
+    <div className="p-4 rounded-lg bg-gradient-to-br from-[#07101a]/50 to-[#0b0c10]/40 border border-gray-800 shadow-lg flex items-center justify-between">
       <div>
         <div className="text-sm text-gray-400">{title}</div>
-        <div className="text-2xl font-bold mt-1">{value}</div>
-        <div className="text-xs text-gray-500 mt-1">{subtitle}</div>
+        <div className="text-2xl font-extrabold mt-1 text-white">{value}</div>
+        <div className="text-xs text-gray-400 mt-1">{subtitle}</div>
+      </div>
+
+      <div className="ml-4 flex items-center gap-3">
+        <div
+          className={`w-10 h-10 rounded-lg bg-gradient-to-br ${accent} flex items-center justify-center shadow-md transform hover:-translate-y-0.5`}
+          aria-hidden
+        >
+          {/* subtle bright dot */}
+          <div className="w-3 h-3 rounded-full bg-white/90" />
+        </div>
       </div>
     </div>
   );
 }
 
-function Tab({ label, active, onClick }) {
+function Tab({ label, active, onClick, color = "cyan" }) {
+  // color: 'cyan' | 'violet' | 'lime' etc.
+  const colorMap = {
+    cyan: "from-cyan-400 to-cyan-600",
+    violet: "from-violet-400 to-violet-600",
+    lime: "from-lime-300 to-lime-500",
+  };
+  const gradient = colorMap[color] || colorMap.cyan;
+
   return (
     <button
       onClick={onClick}
-      className={`px-3 py-2 rounded border border-gray-600 ${active ? "bg-indigo-600 text-white" : "bg-gray-700 text-gray-300 hover:bg-gray-600"}`}
+      className={`px-3 py-2 rounded border border-gray-700 text-sm font-medium ${
+        active
+          ? `bg-gradient-to-r ${gradient} text-black shadow-md`
+          : "bg-transparent text-gray-300 hover:bg-[#11121a]"
+      }`}
     >
       {label}
     </button>
@@ -277,70 +317,75 @@ function ListSection({ title, items, type = "poll", onStatusChange }) {
   const statusOptions = ["draft", "active", "closed"];
 
   const handleCopyLink = (id) => {
-    // example share URL (frontend route for participants)
-    const Id = id;
-      
-
-    navigator.clipboard.writeText(Id).then(() => {
-      alert("Id copied to clipboard! share it with participants.");
+    // Copy a full participant URL to clipboard
+    const shareUrl = `${window.location.origin}/participant/${type}/${id}`;
+    navigator.clipboard.writeText(shareUrl).then(() => {
+      // small non-blocking toast alternative — using alert for demo
+      alert("Link copied! Share it with participants.");
     });
   };
 
   return (
     <div>
-      <h3 className="text-lg font-semibold">{title}</h3>
+      <h3 className="text-lg font-semibold text-cyan-200">{title}</h3>
       <div className="mt-3 space-y-3">
         {items.length === 0 && (
-          <div className="text-sm text-gray-400">
-            No {title.toLowerCase()} found.
-          </div>
+          <div className="text-sm text-gray-400">No {title.toLowerCase()} found.</div>
         )}
         {items.map((it, idx) => (
           <div
             key={idx}
-            className="p-3 border border-gray-700 rounded flex items-center justify-between bg-gray-800"
+            className="p-3 border border-gray-800 rounded-lg flex items-center justify-between bg-gradient-to-br from-[#071026] to-[#08101a] hover:shadow-[0_8px_30px_rgba(0,0,0,0.6)] transform hover:-translate-y-0.5 transition"
           >
             <div>
-              <div className="font-medium">{it.title}</div>
+              <div className="font-medium text-white">{it.title}</div>
               <div className="text-xs text-gray-400">
                 {type === "poll"
                   ? `${it.participants ?? 0} responses`
                   : `${it.participantsCount ?? 0} attempts`}{" "}
-                • Created on {new Date(it.createdAt).toLocaleDateString(
-                            "en-GB",
-                            {
-                              day: "2-digit",
-                              month: "short",
-                              year: "numeric",
-                            }
-                          )}
+                • Created on{" "}
+                <span className="text-cyan-200">
+                  {new Date(it.createdAt).toLocaleDateString("en-GB", {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                  })}
+                </span>
               </div>
             </div>
 
-            {/* STATUS BUTTONS */}
+            {/* ACTIONS */}
             <div className="flex items-center gap-2">
               {/* Copy link */}
               <button
                 onClick={() => handleCopyLink(it._id)}
-                className="px-2 py-1 rounded text-sm border bg-gray-700 text-gray-300 hover:bg-gray-600"
+                className="px-3 py-1 rounded text-sm font-medium border border-cyan-600 text-cyan-300 bg-transparent hover:bg-cyan-600/10"
               >
                 Copy Link
               </button>
 
-                          
-              {statusOptions.map((status) => (
-                <button
-                  key={status}
-                  onClick={() => onStatusChange(it._id, status)}
-                  className={`px-2 py-1 rounded text-sm border ${
-                    it.status === status
-                      ? "bg-indigo-600 text-white border-indigo-500"
-                      : "bg-gray-700 text-gray-300 border-gray-600 hover:bg-gray-600"
-                  }`}
+              {/* Status dropdown (compact) */}
+              <div className="inline-block relative">
+                <select
+                  value={it.status}
+                  onChange={(e) => onStatusChange(it._id, e.target.value)}
+                  className="px-2 py-1 rounded bg-[#0b0c12] border border-gray-700 text-sm text-gray-200"
                 >
-                  {status.charAt(0).toUpperCase() + status.slice(1)}
-                </button>
-              ))}
+                  {statusOptions.map((status) => (
+                    <option key={status} value={status}>
+                      {status.charAt(0).toUpperCase() + status.slice(1)}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* quick nav */}
+              <Link
+                to={`/host/${type}/${it._id}`}
+                className="px-3 py-1 rounded text-sm font-medium bg-violet-600/20 text-violet-300 border border-violet-700 hover:bg-violet-600/30"
+              >
+                Manage
+              </Link>
             </div>
           </div>
         ))}
@@ -348,4 +393,3 @@ function ListSection({ title, items, type = "poll", onStatusChange }) {
     </div>
   );
 }
-
