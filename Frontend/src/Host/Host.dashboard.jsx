@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, NavLink } from "react-router-dom";
 import { API_BASE_URL } from "../api.js";
 
 
@@ -194,18 +194,7 @@ export default function HostDashboard() {
                       onMouseLeave={() => setOpenMenu(false)}
                       className="absolute right-0 mt-2 w-44 rounded-lg border border-[#1c1e32] bg-[#151735] shadow-xl"
                     >
-                      <NavLink
-                        to="/participant/dashboard"
-                        className="block px-3 py-2 text-sm text-gray-200 hover:bg-[#1c1e32]"
-                      >
-                        Dashboard
-                      </NavLink>
-                      <NavLink
-                        to="/participant/events"
-                        className="block px-3 py-2 text-sm text-gray-200 hover:bg-[#1c1e32]"
-                      >
-                        My Events
-                      </NavLink>
+                      
                       <NavLink
                         to="/settings"
                         className="block px-3 py-2 text-sm text-gray-200 hover:bg-[#1c1e32]"
