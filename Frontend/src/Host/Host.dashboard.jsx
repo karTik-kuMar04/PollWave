@@ -15,6 +15,9 @@ export default function HostDashboard() {
   const navigate = useNavigate();
 
 
+  const [openMenu, setOpenMenu] = useState(false);
+
+
 
 
 
@@ -149,20 +152,6 @@ export default function HostDashboard() {
               <p className="text-xs text-gray-400">Host Dashboard</p>
             </div>
           </div>
-
-          <nav className="flex-1">
-            <ul className="space-y-1">
-              <li className="px-3 py-2 rounded hover:bg-gray-700 cursor-pointer">Dashboard</li>
-              <li className="px-3 py-2 rounded hover:bg-gray-700 cursor-pointer">Polls</li>
-              <li className="px-3 py-2 rounded hover:bg-gray-700 cursor-pointer">Quizzes</li>
-              <li className="px-3 py-2 rounded hover:bg-gray-700 cursor-pointer">Analytics</li>
-              <li className="px-3 py-2 rounded hover:bg-gray-700 cursor-pointer">Settings</li>
-            </ul>
-          </nav>
-
-          <div className="mt-auto">
-            <button onClick={handleLogOut} className="w-full text-left px-3 py-2 rounded bg-red-600/20 text-red-400 hover:bg-red-600/30">Logout</button>
-          </div>
         </aside>
 
         {/* MAIN */}
@@ -196,10 +185,41 @@ export default function HostDashboard() {
                 </div>
 
                 <div className="relative">
-                  <button className="flex items-center gap-2 px-3 py-2 border border-gray-600 bg-gray-700 rounded">
+                  <button onClick={() => setOpenMenu((s) => !s)} className="flex items-center gap-2 px-3 py-2 border border-gray-600 bg-gray-700 rounded">
                     <span className="w-7 h-7 bg-gray-600 rounded-full flex items-center justify-center text-sm">{user?.fullName?.charAt(0).toUpperCase()}</span>
                     <span className="hidden sm:block">{user?.fullName}</span>
                   </button>
+                  {openMenu && (
+                    <div
+                      onMouseLeave={() => setOpenMenu(false)}
+                      className="absolute right-0 mt-2 w-44 rounded-lg border border-[#1c1e32] bg-[#151735] shadow-xl"
+                    >
+                      <NavLink
+                        to="/participant/dashboard"
+                        className="block px-3 py-2 text-sm text-gray-200 hover:bg-[#1c1e32]"
+                      >
+                        Dashboard
+                      </NavLink>
+                      <NavLink
+                        to="/participant/events"
+                        className="block px-3 py-2 text-sm text-gray-200 hover:bg-[#1c1e32]"
+                      >
+                        My Events
+                      </NavLink>
+                      <NavLink
+                        to="/settings"
+                        className="block px-3 py-2 text-sm text-gray-200 hover:bg-[#1c1e32]"
+                      >
+                        Settings
+                      </NavLink>
+                      <button
+                        onClick={handleLogOut}
+                        className="w-full text-left px-3 py-2 text-sm text-rose-300 hover:bg-[#2a1320]"
+                      >
+                        Logout
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
