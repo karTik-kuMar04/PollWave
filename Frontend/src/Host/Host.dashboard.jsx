@@ -288,7 +288,7 @@ function StatCard({ title, value, subtitle, icon }) {
         <div className="text-2xl font-bold mt-1">{value}</div>
         <div className="text-xs text-gray-500 mt-1">{subtitle}</div>
       </div>
-      <div className="w-12 h-12 bg-gray-700 rounded flex items-center justify-center">{icon}</div>
+      <div className="w-12 h-12 bg-gray-700 rounded flex items-center justify-center"><img src={icon} alt="" /></div>
     </div>
   );
 }
