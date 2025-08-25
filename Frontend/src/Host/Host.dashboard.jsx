@@ -147,7 +147,7 @@ export default function HostDashboard() {
         {/* MAIN */}
         <main className="flex-1">
           {/* HEADER */}
-          <header className="sticky top-0 z-10 bg-gray-800 border-b border-gray-700">
+          <header className="flex flex-row sticky top-0 z-10 bg-gray-800 border-b border-gray-700">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-lg flex items-center justify-center text-white font-bold">PW</div>
               <div>
@@ -156,22 +156,7 @@ export default function HostDashboard() {
               </div>
             </div>
             <div className="flex items-center justify-between gap-4 p-4 max-w-7xl mx-auto">
-              <div className="flex items-center gap-3">
-                
-                <h2 className="text-xl font-semibold">Dashboard</h2>
-                {/* Search Bar
-                
-                  <div className="ml-4 hidden sm:block">
-                    <input
-                      value={query}
-                      onChange={(e) => setQuery(e.target.value)}
-                      placeholder="Search polls, quizzes..."
-                      className="px-3 py-2 border border-gray-600 bg-gray-700 text-gray-200 rounded w-64 text-sm placeholder-gray-400"
-                    />
-                  </div>
-                
-                */}
-              </div>
+              
 
               <div className="flex items-center gap-3">
                 <div className="hidden sm:flex gap-2">
