@@ -352,7 +352,7 @@ function ListSection({ title, items, type = "poll", onStatusChange }) {
                 onClick={() => handleCopyLink(it._id)}
                 className="px-3 py-1 rounded text-sm font-medium border border-cyan-600 text-cyan-300 bg-transparent hover:bg-cyan-600/10"
               >
-                Copy Link
+                Copy Id
               </button>
 
               {/* Status dropdown (compact) */}
