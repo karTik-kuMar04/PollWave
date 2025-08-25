@@ -412,10 +412,6 @@ export const getMyPollsResponses = async (req, res, next) => {
     .select("selectedOptionIds createdAt poll");
 
 
-    if (!responseOnPoll || responseOnPoll.length === 0) {
-      throw new apiError(404, "you did not participated in any polls yet"); // this should changed as message in future
-    }
-
     res.status(200).json({
       success: true,
       responseOnPoll,
@@ -443,10 +439,6 @@ export const getMyResonponseOnQuiz = async (req, res, next) => {
       .populate("quiz", "title questions")
       .select("score maxScore passed attemptNumber createdAt quiz");
 
-
-    if (!responceOnQuiz || responceOnQuiz.length === 0) {
-      throw new apiError(404, "You have not attempted any quizzes yet");
-    }
 
     res.status(200).json({
       success: true,
