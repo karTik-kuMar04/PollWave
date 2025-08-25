@@ -221,7 +221,7 @@ export default function Result() {
       <div className="flex justify-center mt-8">
         <button
           className="w-full sm:w-auto px-6 h-11 rounded-full font-semibold text-sm transition-all duration-300 bg-gradient-to-r from-green-400 to-blue-500 text-white hover:from-green-500 hover:to-blue-600"
-          onClick={navigate("/participant/dashboard")}
+          onClick={() => navigate("/participant/dashboard")}
         >To Home</button>
       </div>
     </div>
