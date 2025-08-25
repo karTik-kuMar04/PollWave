@@ -147,15 +147,15 @@ export default function HostDashboard() {
         {/* MAIN */}
         <main className="flex-1">
           {/* HEADER */}
-          <header className="flex flex-row sticky top-0 z-10 bg-gray-800 border-b border-gray-700">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-lg flex items-center justify-center text-white font-bold">PW</div>
-              <div>
-                <h3 className="font-semibold">PollWave</h3>
-                <p className="text-xs text-gray-400">Host Dashboard</p>
-              </div>
-            </div>
+          <header className="sticky top-0 z-10 bg-gray-800 border-b border-gray-700">
             <div className="flex items-center justify-between gap-4 p-4 max-w-7xl mx-auto">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-lg flex items-center justify-center text-white font-bold">PW</div>
+                <div>
+                  <h3 className="font-semibold">PollWave</h3>
+                  <p className="text-xs text-gray-400">Host Dashboard</p>
+                </div>
+              </div>
               
 
               <div className="flex items-center gap-3">
