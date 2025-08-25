@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../api.js";
+import quizIcon from "../../public/quiz-icon.webp";
 
 
 export default function HostDashboard() {
@@ -197,7 +198,7 @@ export default function HostDashboard() {
             {/* STATS */}
             <section className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
               <StatCard title="Total Polls" value={polls?.length} subtitle="Active & drafts" />
-              <StatCard title="Total Quizzes" value={quizzes?.length} subtitle="Published & scheduled" />
+              <StatCard title="Total Quizzes" value={quizzes?.length} subtitle="Published & scheduled" icon={quizIcon}/>
               <StatCard title="Responses" value={totalResponses} subtitle="All time" />
             </section>
 
@@ -267,7 +268,7 @@ export default function HostDashboard() {
 }
 
 /* ---------- Helper components (inside single file for demo) ---------- */
-function StatCard({ title, value, subtitle }) {
+function StatCard({ title, value, subtitle, icon }) {
   return (
     <div className="p-4 bg-gray-800 rounded shadow-sm flex items-center justify-between">
       <div>
@@ -275,7 +276,7 @@ function StatCard({ title, value, subtitle }) {
         <div className="text-2xl font-bold mt-1">{value}</div>
         <div className="text-xs text-gray-500 mt-1">{subtitle}</div>
       </div>
-      <div className="w-12 h-12 bg-gray-700 rounded flex items-center justify-center">📊</div>
+      <div className="w-12 h-12 bg-gray-700 rounded flex items-center justify-center">{icon}</div>
     </div>
   );
 }
