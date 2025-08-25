@@ -2,13 +2,16 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../api.js";
-import quizIcon from "../../public/quiz-icon.webp";
+import quizIcon from "/quiz-icon.webp";
+
+
+
 
 
 export default function HostDashboard() {
   const [activeTab, setActiveTab] = useState("polls"); // 'polls' | 'quizzes' | 'both'
   const [showSidebar, setShowSidebar] = useState(true);
-  const [, setLoading] = React.useState(true);
+  const [loading, setLoading] = React.useState(true);
   const navigate = useNavigate();
 
 
@@ -124,6 +127,15 @@ export default function HostDashboard() {
     }
   }; 
 
+  
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen text-lg">
+        <div className="w-6 h-6 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mr-3"></div>
+        Loading dashboard…
+      </div>
+    );
+  }   
 
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100">
