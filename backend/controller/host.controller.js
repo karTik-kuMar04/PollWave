@@ -71,11 +71,10 @@ export const respondToPoll = async (req, res, next) => {
       throw new apiError(400, "No options selected");
     }
 
-    // ✅ Fetch poll document
+
     const pollDoc = await Poll.findById(pollId).session(session);
     if (!pollDoc) throw new apiError(404, "Poll not found");
 
-    // ✅ Check poll status and timings
     if (pollDoc.status !== "active") throw new apiError(400, "Poll is not active");
 
     const now = new Date();
@@ -86,18 +85,12 @@ export const respondToPoll = async (req, res, next) => {
       throw new apiError(400, "Poll has ended");
     }
 
-    // ✅ Prevent repeat responses if only 1 allowed per user
     if (userId) {
       const already = await PollResponse.findOne({ poll: pollId, user: userId }).session(session);
       if (already) throw new apiError(400, "User has already responded to this poll");
     }
 
-    // ✅ If anonymous responses are not allowed
-    if (!pollDoc.allowedAnonymous && !userId) {
-      throw new apiError(401, "Authentication is required");
-    }
 
-    // ✅ Create poll response
     await PollResponse.create(
       [
         {
@@ -109,7 +102,7 @@ export const respondToPoll = async (req, res, next) => {
       { session }
     );
 
-    // ✅ Update votes & participants atomically
+
     const bulkUpdates = selectedOptionIds.map((optId) => ({
       updateOne: {
         filter: { _id: pollDoc._id, "options._id": optId },
@@ -132,12 +125,12 @@ export const respondToPoll = async (req, res, next) => {
 
     return res.status(200).json({
       success: true,
-      message: "✅ Poll response recorded successfully",
+      message: "Poll response recorded successfully",
     });
   } catch (err) {
     await session.abortTransaction();
     session.endSession();
-    console.error("❌ Error in respondToPoll:", err);
+    console.error("Error in respondToPoll:", err);
     const status = err.status || 500;
     return next({ status, message: err.message || "Failed to record response" });
   }
