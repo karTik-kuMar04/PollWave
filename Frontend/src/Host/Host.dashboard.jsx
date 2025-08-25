@@ -238,27 +238,8 @@ export default function HostDashboard() {
               </div>
             </section>
 
-            {/* QUICK LINKS + CTA */}
-            <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="md:col-span-2">
-                <div className="p-4 bg-gray-800 rounded shadow-sm">
-                  <h3 className="font-semibold mb-2">Recent activity</h3>
-                  <p className="text-sm text-gray-400">No major activity to show. When users respond to polls or quizzes, you’ll see a summary here.</p>
-                </div>
-              </div>
-              {/*
-                <aside>
-                  <div className="p-4 bg-gray-800 rounded shadow-sm">
-                    <h4 className="font-semibold">Quick actions</h4>
-                    <div className="mt-3 flex flex-col gap-2">
-                      <button className="px-3 py-2 rounded border border-gray-600 text-left bg-gray-700 hover:bg-gray-600">Publish a Poll</button>
-                      <button className="px-3 py-2 rounded border border-gray-600 text-left bg-gray-700 hover:bg-gray-600">Schedule Quiz</button>
-                      <button className="px-3 py-2 rounded border border-gray-600 text-left bg-gray-700 hover:bg-gray-600">View Analytics</button>
-                    </div>
-                  </div>
-                </aside>
-              */}
-            </section>
+
+            
           </div>
         </main>
       </div>
