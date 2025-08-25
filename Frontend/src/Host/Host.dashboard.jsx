@@ -157,9 +157,7 @@ export default function HostDashboard() {
             </div>
             <div className="flex items-center justify-between gap-4 p-4 max-w-7xl mx-auto">
               <div className="flex items-center gap-3">
-                <button className="md:hidden p-2 rounded hover:bg-gray-700" onClick={() => setShowSidebar((s) => !s)}>
-                  ☰
-                </button>
+                
                 <h2 className="text-xl font-semibold">Dashboard</h2>
                 {/* Search Bar
                 
