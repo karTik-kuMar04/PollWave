@@ -10,7 +10,6 @@ import { API_BASE_URL } from "../api.js";
 
 export default function HostDashboard() {
   const [activeTab, setActiveTab] = useState("polls"); // 'polls' | 'quizzes' | 'both'
-  const [showSidebar, setShowSidebar] = useState(true);
   const [loading, setLoading] = React.useState(true);
   const navigate = useNavigate();
 
@@ -143,21 +142,19 @@ export default function HostDashboard() {
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100">
       <div className="flex h-full">
-        {/* SIDEBAR */}
-        <aside className={`hidden md:flex md:flex-col md:w-64 p-4 gap-6 bg-gray-800 border-r border-gray-700 shadow-sm ${showSidebar ? "" : "-translate-x-full"}`}>
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-lg flex items-center justify-center text-white font-bold">PW</div>
-            <div>
-              <h3 className="font-semibold">PollWave</h3>
-              <p className="text-xs text-gray-400">Host Dashboard</p>
-            </div>
-          </div>
-        </aside>
+
 
         {/* MAIN */}
         <main className="flex-1">
           {/* HEADER */}
           <header className="sticky top-0 z-10 bg-gray-800 border-b border-gray-700">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-lg flex items-center justify-center text-white font-bold">PW</div>
+              <div>
+                <h3 className="font-semibold">PollWave</h3>
+                <p className="text-xs text-gray-400">Host Dashboard</p>
+              </div>
+            </div>
             <div className="flex items-center justify-between gap-4 p-4 max-w-7xl mx-auto">
               <div className="flex items-center gap-3">
                 <button className="md:hidden p-2 rounded hover:bg-gray-700" onClick={() => setShowSidebar((s) => !s)}>
