@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../../api.js";
 
 
@@ -9,6 +9,9 @@ export default function Result() {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchResult = async () => {
@@ -214,6 +217,12 @@ export default function Result() {
             <div className="font-medium">#{result.attemptNumber ?? 1}</div>
           </div>
         </div>
+      </div>
+      <div className="flex justify-center mt-8">
+        <button
+          className="w-full sm:w-auto px-6 h-11 rounded-full font-semibold text-sm transition-all duration-300 bg-gradient-to-r from-green-400 to-blue-500 text-white hover:from-green-500 hover:to-blue-600"
+          onClick={navigate("/participant/dashboard")}
+        >To Home</button>
       </div>
     </div>
 
