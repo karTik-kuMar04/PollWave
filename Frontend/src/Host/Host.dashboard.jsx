@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../api.js";
-import quizIcon from "/quiz-icon.webp";
+
 
 
 
@@ -210,7 +210,7 @@ export default function HostDashboard() {
             {/* STATS */}
             <section className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
               <StatCard title="Total Polls" value={polls?.length} subtitle="Active & drafts" />
-              <StatCard title="Total Quizzes" value={quizzes?.length} subtitle="Published & scheduled" icon={quizIcon}/>
+              <StatCard title="Total Quizzes" value={quizzes?.length} subtitle="Published & scheduled" icon="/quiz-icon.webp"/>
               <StatCard title="Responses" value={totalResponses} subtitle="All time" />
             </section>
 
