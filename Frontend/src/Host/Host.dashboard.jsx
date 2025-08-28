@@ -167,7 +167,7 @@ export default function HostDashboard() {
                       className="absolute right-0 mt-2 w-44 rounded-lg border border-[#1c1e32] bg-gradient-to-b from-[#0f1222] to-[#0b0d18] shadow-xl overflow-hidden"
                     >
                       <NavLink
-                        to="/settings"
+                        to="/work/progress"
                         className="block px-3 py-2 text-sm text-gray-200 hover:bg-[#111126]"
                       >
                         Settings
@@ -372,7 +372,8 @@ function ListSection({ title, items, type = "poll", onStatusChange }) {
 
               {/* quick nav */}
               <Link
-                to={`/host/${type}/${it._id}`}
+                // to={`/host/${type}/${it._id}`}
+                to={`/work/progress`}
                 className="px-3 py-1 rounded text-sm font-medium bg-violet-600/20 text-violet-300 border border-violet-700 hover:bg-violet-600/30"
               >
                 Manage

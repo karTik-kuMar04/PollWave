@@ -116,7 +116,7 @@ const Quiz = () => {
           </div>
 
           {/* Submit Button */}
-          <div className="flex justify-center mt-6">
+          <div className="flex justify-center mt-6 gap-4">
             <button
               disabled={!allAnswered}
               onClick={submit}
@@ -127,6 +127,12 @@ const Quiz = () => {
               }`}
             >
               Submit Quiz
+            </button>
+            <button
+              onClick={() => navigate("/participant/dashboard")}
+              className="w-full sm:w-auto px-6 h-11 rounded-full font-semibold text-sm bg-red-500 hover:bg-red-600 text-white transition-all duration-300"
+            >
+              Cancel
             </button>
           </div>
         </div>

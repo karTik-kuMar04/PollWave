@@ -222,7 +222,7 @@ export default function Result() {
         <button
           className="w-full sm:w-auto px-6 h-11 rounded-full font-semibold text-sm transition-all duration-300 bg-gradient-to-r from-green-400 to-blue-500 text-white hover:from-green-500 hover:to-blue-600"
           onClick={() => navigate("/participant/dashboard")}
-        >To Home</button>
+        >Back to Dashboard</button>
       </div>
     </div>
 

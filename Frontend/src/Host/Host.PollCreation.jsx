@@ -83,6 +83,7 @@ const CreatePoll = () => {
       options: [{ text: "" }, { text: "" }],
     });
     clearErrors();
+    navigate(-1);
   };
 
   return (
@@ -218,7 +219,7 @@ const CreatePoll = () => {
       {/* Success Toast */}
       {submitted && (
         <div className="fixed bottom-5 right-5 bg-green-600 text-white px-4 py-2 rounded-lg shadow-md animate-bounce">
-          🎉 Poll created successfully! Redirecting to dashboard...
+          Poll created successfully! Redirecting to dashboard...
         </div>
       )}
     </div>

@@ -121,16 +121,7 @@ export default function CreateQuizEnhanced() {
               <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-indigo-400">Create a New Quiz</h1>
               <p className="text-gray-300 mt-1 text-sm">Make a short, engaging quiz — keep questions clear and concise.</p>
             </div>
-            <div className="hidden md:flex items-center gap-3">
-              <button
-                onClick={() => {
-                  append({ question: "", options: ["", "", "", ""], answer: "" });
-                }}
-                className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 px-3 py-2 rounded-md shadow"
-              >
-                + Question
-              </button>
-            </div>
+            
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -275,15 +266,10 @@ export default function CreateQuizEnhanced() {
               </button>
 
               <button
-                onClick={() => {
-                  // quick preview if possible
-                  if (fields.length === 0) return;
-                  // build quick preview from current form values by triggering submit handler.
-                  // For simplicity user can click Preview on form after editing.
-                }}
+                onClick={() => navigate(-1)}
                 className="w-full text-sm bg-gray-700 hover:bg-gray-600 px-3 py-2 rounded-lg"
               >
-                Open Preview
+                Cancel
               </button>
             </div>
           </div>
