@@ -88,13 +88,19 @@ const PollCard = () => {
             ))}
           </div>
 
-          <div className="flex justify-center mt-5">
+          <div className="flex justify-center mt-5 gap-10">
             <button
               onClick={onSubmit}
               disabled={loading}
               className="flex w-full sm:w-auto items-center justify-center overflow-hidden rounded-full h-10 px-6 bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-600 text-white text-sm font-bold leading-normal tracking-[0.015em] disabled:opacity-50"
             >
               {loading ? "Submitting..." : "Submit Vote"}
+            </button>
+            <button
+              onClick={() => navigate("/participant/dashboard")}
+              className="flex w-full sm:w-auto items-center justify-center overflow-hidden rounded-full h-10 px-6 bg-red-500 cursor-pointer text-white text-sm font-bold leading-normal tracking-[0.015em]"
+            >
+              Cancel
             </button>
           </div>
         </div>

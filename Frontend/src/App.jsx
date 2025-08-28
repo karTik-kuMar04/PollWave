@@ -17,6 +17,10 @@ import NotFound from './Webpage/NotFound';
 import JoinPage from './Participant/Pages/Join';
 import Result from './Features/Quizzes/Result';
 import ForgetPasswordPage from './Authentication/ForgetPassword';
+import WorkInProgress from './Webpage/WorkProgress';
+import About from './Webpage/About';
+import Help from './Webpage/Help';
+import Terms from './Webpage/Terms';
 
 const App = () => {
   return (
@@ -27,6 +31,9 @@ const App = () => {
       <Route path="login" element={<LoginPage />} />
       <Route path="/quiz/:quizId/result/:resultId" element={<Result />} />
       <Route path="/retrive-password" element={<ForgetPasswordPage />} />
+      <Route path="/about" element={<About/>}/>
+      <Route path="/help" element={<Help/>}/>
+      <Route path="/terms" element={<Terms/>}/>
 
 
       {/* Host Protected Routes */}
@@ -87,6 +94,27 @@ const App = () => {
 
       {/* 404 */}
       <Route path="*" element={<NotFound />} />
+      <Route
+        path="work/progress"
+        element={
+          <WorkInProgress
+            title="Feature in Development"
+            message="We're working hard to bring you this feature. Stay tuned for updates!"
+
+          />
+        }
+      />
+      <Route
+        path="participant/dashboard/work/progress"
+        element={
+          <WorkInProgress
+         
+            title="Feature is  in Development"
+            message="We're working hard to bring you this feature. Stay tuned for updates!"
+
+          />
+        }
+      />
     </Routes>
   );
 };

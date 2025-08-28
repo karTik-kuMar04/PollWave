@@ -1,278 +1,187 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import "./landing.css";
-import { TiPencil } from "react-icons/ti";
-import { PiTrophyThin } from "react-icons/pi";
-import { HiOutlineHashtag } from "react-icons/hi2";
-import { FaRegUser } from "react-icons/fa6";
-import { PiUsersThree } from "react-icons/pi";
-import { FaLinkedin } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { FaRegUser, FaLinkedin } from "react-icons/fa6";
 import { VscGithubAlt } from "react-icons/vsc";
+import { PiUsersThree, PiTrophy } from "react-icons/pi";
+import { TiPencil } from "react-icons/ti";
+import { HiOutlineHashtag } from "react-icons/hi2";
 
 function Landing() {
   return (
-    <div
-      className="relative flex size-full min-h-screen flex-col bg-[#141118] dark group/design-root overflow-x-hidden"
-      style={{ fontFamily: `"Spline Sans", "Noto Sans", sans-serif` }}
-    >
-      <div className="layout-container flex h-full grow flex-col">
-        <header className="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#302839] px-10 py-3">
-          <div className="flex items-center gap-4 text-white">
-            
-            <h2 className="text-white text-lg font-bold leading-tight tracking-[-0.015em]">
-              PollWave
-            </h2>
+    <div className="bg-[#0b0f17] text-white min-h-screen flex flex-col">
+      {/* Header */}
+      <header className="w-full max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-lg flex items-center justify-center font-bold text-lg bg-gradient-to-r from-indigo-500 to-purple-500">
+            PW
           </div>
-          <div className="flex flex-1 justify-end gap-8">
-            <div className="flex gap-2">
-              <Link to="/registration" className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-[#7f0cf2] text-white text-sm font-bold leading-normal tracking-[0.015em]">
-                <span className="truncate">Sign Up</span>
-              </Link>
-              <Link to="/login" className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-[#302839] text-white text-sm font-bold leading-normal tracking-[0.015em]">
-                <span className="truncate">Login</span>
-              </Link>
-            </div>
-          </div>
-        </header>
-        <div className="px-40 flex flex-1 justify-center py-5">
-          <div className="layout-content-container flex flex-col max-w-[960px] flex-1">
-            <div className="@container">
-              <div className="@[480px]:p-4">
-                <div
-                  className="flex min-h-[480px] flex-col gap-6 bg-cover bg-center bg-no-repeat @[480px]:gap-8 @[480px]:rounded-xl items-start justify-end px-4 pb-10 @[480px]:px-10"
-                  style={{background: "linear-gradient(to top right, #2f2e5b, #aa294f, #db682c)"}}
-                >
-                  <div className="flex flex-col gap-2 text-left">
-                    <h1 className="text-white text-4xl font-black leading-tight tracking-[-0.033em] @[480px]:text-5xl @[480px]:font-black @[480px]:leading-tight @[480px]:tracking-[-0.033em]">
-                      Host Live Polls &amp; Quizzes in Seconds
-                    </h1>
-                    <h2 className="text-white text-sm font-normal italic leading-normal @[480px]:text-base @[480px]:font-normal @[480px]:leading-normal">
-                      Engage your audience with interactive polls and timed
-                      quizzes in real-time.
-                    </h2>
-                  </div>
-                  <div className="flex-wrap gap-3 flex">
-                    <button className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 @[480px]:h-12 @[480px]:px-5 bg-[#7f0cf2] text-white text-sm font-bold leading-normal tracking-[0.015em] @[480px]:text-base @[480px]:font-bold @[480px]:leading-normal @[480px]:tracking-[0.015em]">
-                      <span className="truncate">Host a Session</span>
-                    </button>
-                    <button className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 @[480px]:h-12 @[480px]:px-5 bg-[#302839] text-white text-sm font-bold leading-normal tracking-[0.015em] @[480px]:text-base @[480px]:font-bold @[480px]:leading-normal @[480px]:tracking-[0.015em]">
-                      <span className="truncate">Join with Code</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <h2 className="text-white text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">
-              Features
-            </h2>
-            <div className="flex flex-col gap-10 px-4 py-10 @container">
-              <div className="flex flex-col gap-4">
-                <h1 className="text-white tracking-light text-[32px] font-bold leading-tight @[480px]:text-4xl @[480px]:font-black @[480px]:leading-tight @[480px]:tracking-[-0.033em] max-w-[720px]">
-                  What you can do with PollWave
-                </h1>
-                <p className="text-white text-base italic leading-normal max-w-[720px]">
-                  Explore the powerful features that make PollWave the ultimate
-                  platform for interactive events.
-                </p>
-              </div>
-              <div className="grid grid-cols-[repeat(auto-fit,minmax(158px,1fr))] gap-3 p-0">
-                <div className="flex flex-1 gap-3 rounded-lg border border-[#473b54] bg-[#211b27] p-4 flex-col cursor-pointer">
-                  <div
-                    className="text-white"
-                    data-icon="Pencil"
-                    data-size="24px"
-                    data-weight="regular"
-                  >
-                    <span
-                      className="text-white w-[20px] h-[20px] text-2xl"
-                    >
-                      <TiPencil />
-                    </span>
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <h2 className="text-white text-base font-bold leading-tight">
-                      Create &amp; Customize Polls
-                    </h2>
-                    <p className="text-[#ab9cba] text-sm font-normal leading-normal italic">
-                      Design polls with various question types and options to
-                      suit your needs.
-                    </p>
-                  </div>
-                </div>
-                <div className="flex flex-1 gap-3 rounded-lg border border-[#473b54] bg-[#211b27] p-4 flex-col cursor-pointer">
-                  <div
-                    className="text-white"
-                    data-icon="Trophy"
-                    data-size="24px"
-                    data-weight="regular"
-                  >
-                    <span
-                      className="text-white w-[20px] h-[20px] text-2xl"
-                    >
-                      <PiTrophyThin />
-                    </span>
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <h2 className="text-white text-base font-bold leading-tight">
-                      Host Quizzes with Live Scores
-                    </h2>
-                    <p className="text-[#ab9cba] text-sm font-normal leading-normal italic">
-                      Run quizzes with real-time leaderboards and instant
-                      feedback.
-                    </p>
-                  </div>
-                </div>
-                <div className="flex flex-1 gap-3 rounded-lg border border-[#473b54] bg-[#211b27] p-4 flex-col cursor-pointer">
-                  <div
-                    className="text-white"
-                    data-icon="Hash"
-                    data-size="24px"
-                    data-weight="regular"
-                  >
-                    <span
-                      className="text-white w-[20px] h-[20px] text-2xl"
-                    >
-                      <HiOutlineHashtag />
-                    </span>
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <h2 className="text-white text-base font-bold leading-tight">
-                      Easy Code-based Joining
-                    </h2>
-                    <p className="text-[#ab9cba] text-sm font-normal leading-normal italic">
-                      Participants can join sessions quickly using a unique
-                      code.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <h2 className="text-white text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">
-              User Types
-            </h2>
-            <div className="grid grid-cols-[repeat(auto-fit,minmax(158px,1fr))] gap-3 p-4">
-              <div className="flex flex-1 gap-3 rounded-lg border border-[#473b54] bg-[#211b27] p-4 flex-col cursor-pointer">
-                <div
-                  className="text-white"
-                  data-icon="User"
-                  data-size="24px"
-                  data-weight="regular"
-                >
-                 <span
-                    className="text-white w-[20px] h-[20px] text-[24px]"
-                  >
-                  <FaRegUser />
-                 </span>
-                </div>
-                <div className="flex flex-col gap-1">
-                  <h2 className="text-white text-base font-bold leading-tight">
-                    Host
-                  </h2>
-                  <p className="text-[#ab9cba] text-sm font-normal leading-normal italic">
-                    Create polls/quizzes, view results
-                  </p>
-                </div>
-              </div>
-              <div className="flex flex-1 gap-3 rounded-lg border border-[#473b54] bg-[#211b27] p-4 flex-col cursor-pointer">
-                <div
-                  className="text-white"
-                  data-icon="UsersThree"
-                  data-size="24px"
-                  data-weight="regular"
-                >
-                  <span
-                    className="text-white w-[20px] h-[20px] text-[24px]"
-                  >
-                    <PiUsersThree />
-                  </span>
-                </div>
-                <div className="flex flex-col gap-1">
-                  <h2 className="text-white text-base font-bold leading-tight">
-                    Participant
-                  </h2>
-                  <p className="text-[#ab9cba] text-sm font-normal leading-normal italic">
-                    Join sessions, answer questions
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="flex justify-center">
-              <div className="flex flex-1 gap-3 flex-wrap px-4 py-3 max-w-[480px] justify-center">
-                <Link to="/registration?role=host" className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-[#7f0cf2] text-white text-sm font-bold leading-normal tracking-[0.015em] grow">
-                  <span className="truncate">Get Started as Host</span>
-                </Link>
-                <Link to="/registration?role=participant" className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-[#302839] text-white text-sm font-bold leading-normal tracking-[0.015em] grow">
-                  <span className="truncate">Join as Participant</span>
-                </Link>
-              </div>
-            </div>
+          <h1 className="text-lg font-extrabold">PollWave</h1>
+        </div>
+
+        <nav className="flex items-center gap-4">
+          <Link
+            to="/login"
+            className="px-5 py-2 rounded-lg text-sm font-medium border border-gray-700 hover:bg-gray-800 transition"
+          >
+            Login
+          </Link>
+          <Link
+            to="/registration"
+            className="px-5 py-2 rounded-lg text-sm font-semibold bg-gradient-to-r from-indigo-500 to-purple-500 hover:opacity-90 transition"
+          >
+            Sign Up
+          </Link>
+        </nav>
+      </header>
+
+      {/* Hero */}
+      <main className="flex-1 flex items-center justify-center px-6 py-12">
+        <div className="max-w-5xl text-center">
+          <h2 className="text-4xl md:text-6xl font-extrabold leading-tight bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
+            Interactive Polls & Quizzes Made Simple
+          </h2>
+          <p className="mt-5 text-gray-300 text-lg max-w-2xl mx-auto">
+            Host engaging sessions, run real-time quizzes, and collect instant
+            feedback with PollWave. Perfect for events, classrooms, and live
+            streams.
+          </p>
+
+          <div className="mt-8 flex flex-wrap justify-center gap-4">
+            <Link
+              to="/host/create-poll"
+              className="px-6 py-3 rounded-lg font-semibold bg-gradient-to-r from-indigo-500 to-purple-500 hover:opacity-90 transition"
+            >
+              Host a Session
+            </Link>
+            <Link
+              to="/participant/join"
+              className="px-6 py-3 rounded-lg font-semibold border border-gray-700 hover:bg-gray-800 transition"
+            >
+              Join with Code
+            </Link>
           </div>
         </div>
-        <footer className="flex justify-center">
-          <div className="flex max-w-[960px] flex-1 flex-col">
-            <footer className="flex flex-col gap-6 px-5 py-10 text-center @container">
-              <div className="flex flex-wrap items-center justify-center gap-6 @[480px]:flex-row @[480px]:justify-around">
-                <a
-                  className="text-[#ab9cba] text-base font-normal leading-normal min-w-40"
-                  href="#"
-                >
-                  About
-                </a>
-                <a
-                  className="text-[#ab9cba] text-base font-normal leading-normal min-w-40"
-                  href="#"
-                >
-                  Terms
-                </a>
-                <a
-                  className="text-[#ab9cba] text-base font-normal leading-normal min-w-40"
-                  href="#"
-                >
-                  Privacy
-                </a>
-                <a
-                  className="text-[#ab9cba] text-base font-normal leading-normal min-w-40"
-                  href="#"
-                >
-                  Help
-                </a>
-              </div>
-              <div className="flex flex-wrap justify-center gap-4">
-                <a href="https://www.linkedin.com/in/kartik-kumar-2264662a9/" target="_blank">
-                  <div
-                    className="text-[#ab9cba]"
-                    data-icon="LinkedinLogo"
-                    data-size="24px"
-                    data-weight="regular"
-                  >
-                    <span
-                      className="text-white text-2xl "
-                    >
-                      <FaLinkedin />
-                    </span>
-                  </div>
-                </a>
-                <a href="https://github.com/karTik-kuMar04" target="_blank">
-                  <div
-                    className="text-[#ab9cba]"
-                    data-icon="GithubLogo"
-                    data-size="24px"
-                    data-weight="regular"
-                  >
-                    <span
-                      className="text-white text-2xl font-bold"
-                    >
-                      <VscGithubAlt />
-                    </span>
-                  </div>
-                </a>
-              </div>
-              <p className="text-[#ab9cba] text-base font-normal leading-normal">
-                © 2024 PollWave. All rights reserved.
-              </p>
-            </footer>
+      </main>
+
+      {/* Features */}
+      <section className="bg-[#101522] py-16 px-6">
+        <div className="max-w-6xl mx-auto text-center">
+          <h3 className="text-3xl font-bold">Why PollWave?</h3>
+          <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-8">
+            <FeatureCard
+              title="Create Polls Easily"
+              desc="Customize polls with multiple formats and themes."
+              icon={<TiPencil className="text-3xl" />}
+            />
+            <FeatureCard
+              title="Host Live Quizzes"
+              desc="Track scores and leaderboards in real-time."
+              icon={<PiTrophy className="text-3xl" />}
+            />
+            <FeatureCard
+              title="Quick Join Codes"
+              desc="Participants join instantly using codes or QR."
+              icon={<HiOutlineHashtag className="text-3xl" />}
+            />
           </div>
-        </footer>
+        </div>
+      </section>
+
+      {/* User Roles */}
+      <section className="bg-[#0b0f17] py-16 px-6">
+        <div className="max-w-5xl mx-auto text-center">
+          <h3 className="text-3xl font-bold">Who Can Use?</h3>
+          <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-8">
+            <UserCard
+              title="Hosts"
+              desc="Create, manage, and analyze sessions."
+              icon={<FaRegUser className="text-2xl" />}
+            />
+            <UserCard
+              title="Participants"
+              desc="Join live, vote, and see instant results."
+              icon={<PiUsersThree className="text-2xl" />}
+            />
+          </div>
+
+          <div className="mt-10 flex flex-wrap justify-center gap-4">
+            <Link
+              to="/registration?role=host"
+              className="px-6 py-3 rounded-lg font-semibold bg-gradient-to-r from-indigo-500 to-purple-500 hover:opacity-90 transition"
+            >
+              Get Started as Host
+            </Link>
+            <Link
+              to="/registration?role=participant"
+              className="px-6 py-3 rounded-lg font-semibold border border-gray-700 hover:bg-gray-800 transition"
+            >
+              Join as Participant
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-[#101522] border-t border-gray-800 py-8 px-6">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+          <div className="flex gap-6 text-gray-400 text-sm">
+            <Link to="/about" className="hover:text-white">
+              About
+            </Link>
+            <Link to="/terms" className="hover:text-white">
+              Terms
+            </Link>
+            <Link to="/help" className="hover:text-white">
+              Help
+            </Link>
+          </div>
+
+          <div className="flex gap-4">
+            <a
+              href="https://github.com/karTik-kuMar04"
+              target="_blank"
+              rel="noreferrer"
+              className="text-gray-400 hover:text-white"
+            >
+              <VscGithubAlt className="text-2xl" />
+            </a>
+            <a
+              href="https://www.linkedin.com/in/kartik-kumar-2264662a9/"
+              target="_blank"
+              rel="noreferrer"
+              className="text-gray-400 hover:text-white"
+            >
+              <FaLinkedin className="text-2xl" />
+            </a>
+          </div>
+
+          <p className="text-gray-500 text-sm">
+            © {new Date().getFullYear()} PollWave. All rights reserved.
+          </p>
+        </div>
+      </footer>
+    </div>
+  );
+}
+
+function FeatureCard({ title, desc, icon }) {
+  return (
+    <div className="bg-[#181e2a] p-6 rounded-xl text-left hover:bg-[#1f2634] transition shadow-lg">
+      <div className="text-indigo-400 mb-4">{icon}</div>
+      <h4 className="font-semibold text-lg mb-2">{title}</h4>
+      <p className="text-gray-400 text-sm">{desc}</p>
+    </div>
+  );
+}
+
+function UserCard({ title, desc, icon }) {
+  return (
+    <div className="bg-[#181e2a] p-6 rounded-xl flex items-start gap-4 hover:bg-[#1f2634] transition shadow-lg">
+      <div className="text-purple-400">{icon}</div>
+      <div>
+        <h4 className="font-semibold text-lg">{title}</h4>
+        <p className="text-gray-400 text-sm">{desc}</p>
       </div>
     </div>
   );

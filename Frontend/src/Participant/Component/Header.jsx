@@ -45,8 +45,7 @@ const Header = () => {
           {[
             { to: "/participant/dashboard", label: "Home" },
             { to: "/participant/join", label: "Join" },
-            { to: "/participant/upcoming-events", label: "Upcoming Events" },
-            { to: "/explore", label: "Explore" },
+            { to: "/work/progress", label: "Explore" },
           ].map((item) => (
             <NavLink
               key={item.to}
@@ -66,13 +65,15 @@ const Header = () => {
 
         {/* Actions */}
         <div className="flex items-center gap-3">
-          <button
-            className="relative text-white text-xl w-10 h-10 rounded-full bg-[#1c1e32] flex justify-center items-center hover:ring-2 hover:ring-cyan-500/40 transition"
-            aria-label="Notifications"
-          >
-            <CiBellOn />
-            <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-cyan-400 rounded-full" />
-          </button>
+          {/* notifications
+            <button
+              className="relative text-white text-xl w-10 h-10 rounded-full bg-[#1c1e32] flex justify-center items-center hover:ring-2 hover:ring-cyan-500/40 transition"
+              aria-label="Notifications"
+            >
+              <CiBellOn />
+              <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-cyan-400 rounded-full" />
+            </button> 
+          */}
 
           {/* Profile */}
           <div className="relative">
@@ -96,13 +97,13 @@ const Header = () => {
                   Dashboard
                 </NavLink>
                 <NavLink
-                  to="/participant/events"
+                  to="work/progress"
                   className="block px-3 py-2 text-sm text-gray-200 hover:bg-[#1c1e32]"
                 >
                   My Events
                 </NavLink>
                 <NavLink
-                  to="/settings"
+                  to="/work/progress"
                   className="block px-3 py-2 text-sm text-gray-200 hover:bg-[#1c1e32]"
                 >
                   Settings

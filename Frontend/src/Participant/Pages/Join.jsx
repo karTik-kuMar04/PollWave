@@ -21,7 +21,7 @@ export default function JoinPage() {
       <div className="flex items-center justify-center flex-1 text-white px-4">
         <div className="w-full max-w-md bg-white/10 backdrop-blur-lg rounded-2xl shadow-xl p-8 border border-gray-700">
           <h1 className="text-2xl font-bold text-center mb-6 tracking-tight">
-            🎉 Join a Quiz or Poll
+            Join a Quiz or Poll
           </h1>
 
           {/* Type selection */}
@@ -61,7 +61,7 @@ export default function JoinPage() {
             onClick={handleJoin}
             className="w-full mt-5 px-6 py-3 bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 rounded-lg font-semibold text-white shadow-lg transition-all duration-200"
           >
-            🚀 Join {type === "poll" ? "Poll" : "Quiz"}
+            Join {type === "poll" ? "Poll" : "Quiz"}
           </button>
         </div>
       </div>
