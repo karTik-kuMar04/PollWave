@@ -360,7 +360,10 @@ function ListSection({ title, items, type = "poll", onStatusChange }) {
                 <select
                   value={it.status}
                   onChange={(e) => onStatusChange(it._id, e.target.value)}
-                  className="px-2 py-1 rounded bg-[#0b0c12] border border-gray-700 text-sm text-gray-200"
+                  disabled={it.status === "closed"}
+                  className={`px-2 py-1 rounded bg-[#0b0c12] border border-gray-700 text-sm ${
+                    it.status === "closed" ? "text-gray-500 cursor-not-allowed" : "text-gray-200"
+                  }`}
                 >
                   {statusOptions.map((status) => (
                     <option key={status} value={status}>

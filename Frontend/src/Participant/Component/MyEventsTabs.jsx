@@ -188,17 +188,20 @@ function QuizzesTable({ quizzes }) {
 }
 
 
+function PollsTable({ polls = [], loading, error }) {
+  if (loading) {
+    return (
+      <div className="p-6 text-gray-400">Loading your poll responses…</div>
+    );
+  }
 
-function PollsTable({ polls, loading, error }) {
   return (
     <div className="bg-[#1c1e32] rounded-xl border border-[#242746] overflow-hidden">
       <div className="px-5 py-4 border-b border-[#242746] flex items-center justify-between">
         <h2 className="text-lg font-semibold">Joined Polls</h2>
       </div>
 
-      {loading ? (
-        <div className="p-6 text-gray-400">Loading your poll responses…</div>
-      ) : error ? (
+      {error ? (
         <div className="p-6 text-rose-300">{error}</div>
       ) : polls.length === 0 ? (
         <EmptyState message="You haven't voted on any polls yet." />
@@ -210,7 +213,7 @@ function PollsTable({ polls, loading, error }) {
                 <Th>Event Title</Th>
                 <Th>Date of Participation</Th>
                 <Th>Voted For</Th>
-                <Th>When</Th>
+                <Th>Most Voted</Th>
               </tr>
             </thead>
             <tbody>
@@ -218,12 +221,31 @@ function PollsTable({ polls, loading, error }) {
                 const title = p?.poll?.title || "Untitled poll";
                 const opts = Array.isArray(p?.poll?.options) ? p.poll.options : [];
                 const chosen = Array.isArray(p?.selectedOptionIds) ? p.selectedOptionIds : [];
+
+                // User voted options
                 const votedTexts = opts
                   .filter((o) => chosen.includes(o._id))
                   .map((o) => o.text);
 
+                // Most voted options (when poll is closed)
+                let mostVotedTexts = [];
+                let resultText = "";
+                if (p?.poll?.status === "closed" && opts.length) {
+                  const maxVotes = Math.max(...opts.map((o) => o.votes || 0));
+                  mostVotedTexts = opts.filter((o) => (o.votes || 0) === maxVotes);
+
+                  if (mostVotedTexts.length === 1) {
+                    resultText = mostVotedTexts[0].text;
+                  } else {
+                    resultText = `Tie: ${mostVotedTexts.map((o) => o.text).join(", ")}`;
+                  }
+                }
+
                 return (
-                  <tr key={p._id || p.createdAt} className="border-t border-[#242746] hover:bg-[#171935]/60">
+                  <tr
+                    key={p._id || p.createdAt}
+                    className="border-t border-[#242746] hover:bg-[#171935]/60"
+                  >
                     <Td className="font-medium">{title}</Td>
                     <Td>{prettyDate(p.createdAt)}</Td>
                     <Td>
@@ -237,7 +259,15 @@ function PollsTable({ polls, loading, error }) {
                         <span className="text-gray-400">—</span>
                       )}
                     </Td>
-                    <Td className="text-gray-400">{timeAgo(p.createdAt)}</Td>
+                    <Td>
+                      {p?.poll?.status !== "closed" ? (
+                        <span className="text-yellow-400">Poll is still active</span>
+                      ) : mostVotedTexts.length ? (
+                        <Badge className="bg-green-700">{resultText}</Badge>
+                      ) : (
+                        <span className="text-gray-400">—</span>
+                      )}
+                    </Td>
                   </tr>
                 );
               })}
@@ -248,6 +278,8 @@ function PollsTable({ polls, loading, error }) {
     </div>
   );
 }
+
+
 
 /* ---------- tiny UI bits ---------- */
 function Th({ children }) {

@@ -341,7 +341,6 @@ export const getMyQuiz = async (req, res, next) => {
 
 
 
-
 export const pollStatusUpdate = async (req, res, next) => {
   try {
     const { pollId } = req.params;
@@ -351,22 +350,28 @@ export const pollStatusUpdate = async (req, res, next) => {
       return next({ status: 400, message: "Invalid status" });
     }
 
-    const poll = await Poll.findByIdAndUpdate(
-      pollId,
-      { status },
-      { new: true }
-    ).populate("host", "fullName email");
-
+    const poll = await Poll.findById(pollId);
     if (!poll) {
       return res.status(404).json({ success: false, message: "Poll not found" });
     }
 
-    res.status(200).json({ success: true, poll });
+    // prevent reopening once closed
+    if (poll.status === "closed") {
+      return res
+        .status(400)
+        .json({ success: false, message: "Poll is already closed and cannot be changed." });
+    }
+
+    poll.status = status;
+    await poll.save();
+
+    const updatedPoll = await Poll.findById(pollId).populate("host", "fullName email");
+
+    res.status(200).json({ success: true, poll: updatedPoll });
   } catch (error) {
     next(error);
   }
-}
-
+};
 
 export const quizStatusUpdate = async (req, res, next) => {
   try {
@@ -401,7 +406,7 @@ export const getMyPollsResponses = async (req, res, next) => {
 
    const responseOnPoll = await PollResponse.find({ user: participantId })
     .sort({ createdAt: -1 })
-    .populate("poll", "title options")
+    .populate("poll", "title options status")
     .select("selectedOptionIds createdAt poll");
 
 
@@ -486,14 +491,22 @@ export const getQuizResult = async (req, res) => {
 
 
 
-export const  getPollResults = async (req, res) => {
+export const getPollResults = async (req, res) => {
   try {
     const { pollId } = req.params;
 
     const poll = await Poll.findById(pollId);
     if (!poll) return res.status(404).json({ message: "Poll not found" });
 
-    // Aggregate votes by option
+    // Check if user is host
+    const isHost = String(poll.host) === String(req.user?._id);
+
+    // Restrict participants until poll is closed
+    if (poll.status !== "closed" && !isHost) {
+      return res.status(403).json({ message: "Results are only visible after completion" });
+    }
+
+    // Count responses
     const responses = await PollResponse.find({ poll: pollId });
 
     const counts = {};
@@ -506,7 +519,6 @@ export const  getPollResults = async (req, res) => {
         counts[optId] = (counts[optId] || 0) + 1;
       });
     });
-
 
     const results = poll.options.map((opt) => ({
       _id: opt._id,
