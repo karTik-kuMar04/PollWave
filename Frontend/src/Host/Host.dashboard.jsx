@@ -371,13 +371,16 @@ function ListSection({ title, items, type = "poll", onStatusChange }) {
               </div>
 
               {/* quick nav */}
-              <Link
-                // to={`/host/${type}/${it._id}`}
-                to={`/work/progress`}
-                className="px-3 py-1 rounded text-sm font-medium bg-violet-600/20 text-violet-300 border border-violet-700 hover:bg-violet-600/30"
-              >
-                Manage
-              </Link>
+              {title === "Polls" && (
+                <Link
+                  // to={`/host/${type}/${it._id}`}
+                  to={`/poll/${it._id}/results`}
+                  className="px-3 py-1 rounded text-sm font-medium bg-violet-600/20 text-violet-300 border border-violet-700 hover:bg-violet-600/30"
+                >
+                  Results
+                </Link>
+              )}
+              
             </div>
           </div>
         ))}

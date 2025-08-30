@@ -13,7 +13,8 @@ import {
   getMyQuiz,
   quizStatusUpdate,
   getMyResonponseOnQuiz,
-  getQuizResult
+  getQuizResult,
+  getPollResults
 } from "../controller/host.controller.js";
 import { verifyJWT } from "../middlewares/auth.middlewares.js";
 import { get } from "mongoose";
@@ -34,6 +35,7 @@ router.post("/polls/:pollId/respond", verifyJWT, respondToPoll);
 router.get("/mypolls", verifyJWT, getMyPolls);
 router.get("/mypolls/responses", verifyJWT, getMyPollsResponses);
 router.patch("/polls/:pollId/status", pollStatusUpdate);
+router.get("/polls/:pollId/results", verifyJWT, getPollResults);
 
 
 // quizzes

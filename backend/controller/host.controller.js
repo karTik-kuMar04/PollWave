@@ -481,3 +481,47 @@ export const getQuizResult = async (req, res) => {
     res.status(500).json({ message: "Failed to fetch quiz result" });
   }
 };
+
+
+
+
+
+export const  getPollResults = async (req, res) => {
+  try {
+    const { pollId } = req.params;
+
+    const poll = await Poll.findById(pollId);
+    if (!poll) return res.status(404).json({ message: "Poll not found" });
+
+    // Aggregate votes by option
+    const responses = await PollResponse.find({ poll: pollId });
+
+    const counts = {};
+    poll.options.forEach((opt) => {
+      counts[opt._id.toString()] = 0;
+    });
+
+    responses.forEach((resp) => {
+      resp.selectedOptionIds.forEach((optId) => {
+        counts[optId] = (counts[optId] || 0) + 1;
+      });
+    });
+
+
+    const results = poll.options.map((opt) => ({
+      _id: opt._id,
+      text: opt.text,
+      votes: counts[opt._id.toString()] || 0,
+    }));
+
+    res.json({
+      pollId: poll._id,
+      title: poll.title,
+      description: poll.description,
+      results,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to fetch poll results" });
+  }
+};

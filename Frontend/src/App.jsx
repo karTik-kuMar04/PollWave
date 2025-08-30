@@ -21,6 +21,7 @@ import WorkInProgress from './Webpage/WorkProgress';
 import About from './Webpage/About';
 import Help from './Webpage/Help';
 import Terms from './Webpage/Terms';
+import PollResult from './Features/Polling/PollResult';
 
 const App = () => {
   return (
@@ -29,6 +30,7 @@ const App = () => {
       <Route index element={<Landing />} />
       <Route path="registration" element={<Registration />} />
       <Route path="login" element={<LoginPage />} />
+      <Route path="/poll/:pollId/results" element={<PollResult />} />
       <Route path="/quiz/:quizId/result/:resultId" element={<Result />} />
       <Route path="/retrive-password" element={<ForgetPasswordPage />} />
       <Route path="/about" element={<About/>}/>
@@ -88,7 +90,7 @@ const App = () => {
         }
       />
 
-      {/* Public Features */}
+
       <Route path="poll/:pollId" element={<PollCard />} />
       <Route path="quiz/:quizId" element={<Quiz />} />
 
